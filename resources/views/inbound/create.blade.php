@@ -116,11 +116,6 @@ function addLineItem(line = {}) {
         </div>
 
         <div class="col-span-6 md:col-span-2">
-            <label class="mb-1 block text-xs font-medium">Lot Number</label>
-            <input type="text" name="items[${lineCount}][lot_number]" class="w-full rounded-2xl border border-gray-300 bg-white px-5 py-4 dark:border-gray-600 dark:bg-gray-800">
-        </div>
-
-        <div class="col-span-6 md:col-span-2">
             <label class="mb-1 block text-xs font-medium">Expiration Date</label>
             <input type="date" name="items[${lineCount}][expiration_date]" class="w-full rounded-2xl border border-gray-300 bg-white px-5 py-4 dark:border-gray-600 dark:bg-gray-800">
         </div>
@@ -128,6 +123,13 @@ function addLineItem(line = {}) {
         <div class="col-span-6 md:col-span-2">
             <label class="mb-1 block text-xs font-medium">Unit Cost</label>
             <input type="number" step="0.01" min="0" name="items[${lineCount}][unit_cost]" value="${line.unit_cost || ''}" required class="w-full rounded-2xl border border-gray-300 bg-white px-5 py-4 dark:border-gray-600 dark:bg-gray-800">
+        </div>
+
+        <div class="col-span-12 md:col-span-2">
+            <label class="mb-1 block text-xs font-medium">Lot Number</label>
+            <div class="rounded-2xl border border-dashed border-gray-300 bg-white px-5 py-4 text-sm text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                Auto generated
+            </div>
         </div>
 
         <div class="col-span-12 md:col-span-4">

@@ -41,7 +41,6 @@ class InboundTransactionController extends Controller
             'items' => 'required|array|min:1',
             'items.*.item_id' => 'required|exists:items,itemID',
             'items.*.quantity' => 'required|integer|min:1',
-            'items.*.lot_number' => 'nullable|string',
             'items.*.expiration_date' => 'nullable|date',
             'items.*.unit_cost' => 'required|numeric|min:0',
             'items.*.location_id' => 'nullable|exists:locations,locationID',
@@ -66,7 +65,7 @@ class InboundTransactionController extends Controller
 
             $totalCost = 0;
 
-            foreach ($request->items as $data) {
+            foreach ($request->items as $index => $data) {
                 $lineTotal = $data['quantity'] * $data['unit_cost'];
                 $totalCost += $lineTotal;
 
@@ -77,10 +76,12 @@ class InboundTransactionController extends Controller
                     throw new \RuntimeException('Please create a location or assign a default location to this item before receiving stock.');
                 }
 
+                $lotNumber = $this->generateLotNumber($inbound, $index + 1);
+
                 $batch = InventoryBatch::create([
                     'itemID' => $data['item_id'],
                     'locationID' => $locationID,
-                    'lot_number' => $data['lot_number'],
+                    'lot_number' => $lotNumber,
                     'expiration_date' => $data['expiration_date'],
                     'current_quantity' => $data['quantity'],
                     'unit_cost' => $data['unit_cost'],
@@ -91,7 +92,7 @@ class InboundTransactionController extends Controller
                     'itemID' => $data['item_id'],
                     'batchID' => $batch->batchID,
                     'quantity_received' => $data['quantity'],
-                    'lot_number' => $data['lot_number'],
+                    'lot_number' => $lotNumber,
                     'expiration_date' => $data['expiration_date'],
                     'unit_cost' => $data['unit_cost'],
                 ]);
@@ -173,5 +174,12 @@ class InboundTransactionController extends Controller
         $inbound->update(['quality_status' => $request->quality_status]);
 
         return redirect()->back()->with('success', 'Quality check updated.');
+    }
+
+    private function generateLotNumber(InboundTransaction $inbound, int $lineNumber): string
+    {
+        $datePart = $inbound->date_received?->format('Ymd') ?? now()->format('Ymd');
+
+        return sprintf('LOT-%s-%05d-%02d', $datePart, $inbound->in_transactionID, $lineNumber);
     }
 }
