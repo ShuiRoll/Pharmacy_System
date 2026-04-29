@@ -38,8 +38,9 @@
                 </div>
 
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-slate-200">Price (&#8369;) <span class="text-rose-300">*</span></label>
+                    <label class="mb-2 block text-sm font-medium text-slate-200">Current SRP (&#8369;) <span class="text-rose-300">*</span></label>
                     <input type="number" step="0.01" min="0" name="price" value="{{ old('price') }}" required class="form-input">
+                    <p class="mt-2 text-xs text-slate-400">Use the current Philippine suggested retail price for POS selling.</p>
                 </div>
 
                 <div>

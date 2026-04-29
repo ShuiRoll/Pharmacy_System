@@ -47,8 +47,8 @@
                 <p class="mt-2 text-lg font-semibold text-white">{{ $item->location->name ?? 'Not set' }}</p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <p class="text-sm text-slate-300">Earliest Expiry</p>
-                <p class="mt-2 text-lg font-semibold text-white">{{ $earliestBatch?->expiration_date?->format('M d, Y') ?? 'N/A' }}</p>
+                <p class="text-sm text-slate-300">Current SRP</p>
+                <p class="mt-2 text-lg font-semibold text-white">PHP {{ number_format($item->price, 2) }}</p>
             </div>
         </div>
     </section>
@@ -68,6 +68,8 @@
                         <th class="px-6 py-4 font-semibold">Location</th>
                         <th class="px-6 py-4 text-right font-semibold">Current Quantity</th>
                         <th class="px-6 py-4 text-right font-semibold">Unit Cost</th>
+                        <th class="px-6 py-4 text-right font-semibold">Current SRP</th>
+                        <th class="px-6 py-4 text-right font-semibold">Retail Value</th>
                         <th class="px-6 py-4 text-center font-semibold">Status</th>
                     </tr>
                 </thead>
@@ -83,6 +85,8 @@
                             <td class="px-6 py-5 text-slate-300">{{ $batch->location->name ?? 'Not set' }}</td>
                             <td class="px-6 py-5 text-right font-semibold text-white">{{ $batch->current_quantity }}</td>
                             <td class="px-6 py-5 text-right text-slate-300">PHP {{ number_format($batch->unit_cost ?? 0, 2) }}</td>
+                            <td class="px-6 py-5 text-right text-slate-300">PHP {{ number_format($item->price, 2) }}</td>
+                            <td class="px-6 py-5 text-right font-semibold text-white">PHP {{ number_format($batch->current_quantity * $item->price, 2) }}</td>
                             <td class="px-6 py-5 text-center">
                                 @if($batch->current_quantity <= 0)
                                     <span class="rounded-full bg-slate-500/15 px-3 py-1 text-xs font-semibold text-slate-300">Empty</span>
@@ -97,7 +101,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-300">No batches recorded for this item yet.</td>
+                            <td colspan="8" class="px-6 py-10 text-center text-sm text-slate-300">No batches recorded for this item yet.</td>
                         </tr>
                     @endforelse
                 </tbody>

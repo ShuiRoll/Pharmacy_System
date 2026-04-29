@@ -124,7 +124,7 @@ function addOutboundLine() {
             <input type="number" min="1" value="1" name="items[${index}][quantity]" required oninput="syncOutboundLine(this)" class="form-input text-center outbound-quantity">
         </div>
         <div class="md:col-span-2">
-            <label class="mb-1 block text-xs font-medium text-slate-300">Unit Price</label>
+            <label class="mb-1 block text-xs font-medium text-slate-300">Current SRP</label>
             <div class="form-input outbound-price">&#8369;0.00</div>
         </div>
         <div class="md:col-span-2">

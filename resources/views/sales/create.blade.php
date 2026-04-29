@@ -39,6 +39,7 @@
                                     <p class="mt-1 font-mono text-xs text-slate-400">{{ $item->item_code }}</p>
                                 </div>
                                 <p class="text-lg font-bold text-white">&#8369;{{ number_format($item->price, 2) }}</p>
+                                <p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">SRP</p>
                             </div>
 
                             <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-slate-300">
