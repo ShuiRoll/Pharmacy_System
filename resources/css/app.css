@@ -15,6 +15,41 @@
         background-color: #0f172a;
         color: #ffffff;
     }
+
+    .overflow-hidden:has(table) {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@layer components {
+    .toast-stack {
+        pointer-events: none;
+    }
+
+    .toast {
+        @apply pointer-events-auto flex items-start justify-between gap-4 rounded-2xl border px-4 py-3 shadow-2xl shadow-black/30 backdrop-blur-xl;
+    }
+
+    .toast-success {
+        @apply border-emerald-500/20 bg-emerald-500/15 text-emerald-50;
+    }
+
+    .toast-error {
+        @apply border-rose-500/20 bg-rose-500/15 text-rose-50;
+    }
+
+    .toast-title {
+        @apply text-xs font-semibold uppercase tracking-[0.24em] opacity-80;
+    }
+
+    .toast-message {
+        @apply mt-1 text-sm leading-6;
+    }
+
+    .toast-close {
+        @apply -mr-1 -mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/10 text-lg leading-none text-white/80 transition hover:bg-white/20 hover:text-white;
+    }
 }
 
 @layer components {

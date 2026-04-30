@@ -22,7 +22,7 @@
                 <th class="text-left p-6 font-medium">Email</th>
                 <th class="text-center p-6 font-medium">Role</th>
                 <th class="text-left p-6 font-medium">Profile</th>
-                <th class="w-40 p-6 text-right font-medium">Actions</th>
+                <th class="w-56 p-6 text-right font-medium">Actions</th>
             </tr>
         </thead>
         <tbody class="divide-y">
@@ -42,13 +42,13 @@
                         Staff profile
                     @endif
                 </td>
-                <td class="p-6 text-right">
-                    <div class="flex items-center justify-end gap-3">
-                        <a href="{{ route('users.edit', $user) }}" class="text-blue-600 hover:underline">Edit</a>
-                        <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Delete this user?');">
+                <td class="w-56 p-6 text-right align-middle whitespace-nowrap">
+                    <div class="inline-flex items-center justify-end gap-4 whitespace-nowrap">
+                        <a href="{{ route('users.edit', $user) }}" class="inline-flex whitespace-nowrap text-blue-600 hover:underline">Edit</a>
+                        <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-flex" onsubmit="return confirm('Delete this user?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                            <button type="submit" class="inline-flex whitespace-nowrap text-red-600 hover:underline">Delete</button>
                         </form>
                     </div>
                 </td>

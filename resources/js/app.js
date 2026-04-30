@@ -1,6 +1,46 @@
 import './bootstrap';
 
+function dismissToast(toast) {
+    if (! toast || toast.dataset.toastClosing === 'true') {
+        return;
+    }
+
+    toast.dataset.toastClosing = 'true';
+    toast.classList.add('opacity-0', 'translate-y-2', 'scale-95');
+    toast.classList.remove('opacity-100');
+
+    window.setTimeout(() => {
+        toast.remove();
+    }, 220);
+}
+
 document.addEventListener('click', (event) => {
+    const toastClose = event.target.closest('[data-toast-close]');
+
+    if (toastClose) {
+        dismissToast(toastClose.closest('[data-toast]'));
+        return;
+    }
+
+    const profileToggle = event.target.closest('[data-profile-menu-toggle]');
+
+    if (profileToggle) {
+        const menuWrap = profileToggle.closest('[data-profile-menu-wrap]');
+        const menu = menuWrap?.querySelector('[data-profile-menu]');
+
+        if (menu) {
+            menu.classList.toggle('hidden');
+        }
+
+        return;
+    }
+
+    const openProfileMenu = document.querySelector('[data-profile-menu-wrap] [data-profile-menu]:not(.hidden)');
+
+    if (openProfileMenu && ! event.target.closest('[data-profile-menu-wrap]')) {
+        openProfileMenu.classList.add('hidden');
+    }
+
     const filter = event.target.closest('[data-section-filter]');
 
     if (filter) {
@@ -87,6 +127,10 @@ document.addEventListener('input', (event) => {
 });
 
 window.addEventListener('load', () => {
+    document.querySelectorAll('[data-toast]').forEach((toast) => {
+        window.setTimeout(() => dismissToast(toast), 5000);
+    });
+
     document.querySelectorAll('form[data-unique-form]').forEach(validateUniqueForm);
 
     document.querySelectorAll('[data-filter-scope]').forEach((scope) => {
