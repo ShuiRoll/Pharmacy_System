@@ -42,8 +42,17 @@
 
                 <div>
                     <label class="block text-sm font-medium mb-2">Reason <span class="text-red-500">*</span></label>
-                    <textarea name="reason" rows="4" required
-                              class="w-full px-6 py-4 bg-gray-100 dark:bg-gray-700 rounded-2xl focus:outline-none focus:border-blue-500"></textarea>
+                    <select name="reason" id="return-reason" required onchange="toggleReturnReasonOther()"
+                            class="w-full px-6 py-4 bg-gray-100 dark:bg-gray-700 rounded-2xl focus:outline-none focus:border-blue-500">
+                        <option value="">Select return reason</option>
+                        <option value="Customer returned item" @selected(old('reason') === 'Customer returned item')>Customer returned item</option>
+                        <option value="Wrong item sold" @selected(old('reason') === 'Wrong item sold')>Wrong item sold</option>
+                        <option value="Damaged item" @selected(old('reason') === 'Damaged item')>Damaged item</option>
+                        <option value="Expired item" @selected(old('reason') === 'Expired item')>Expired item</option>
+                        <option value="Others" @selected(old('reason') === 'Others')>Others</option>
+                    </select>
+                    <textarea name="reason_other" id="return-reason-other" rows="3" placeholder="Enter return reason"
+                              class="mt-3 hidden w-full px-6 py-4 bg-gray-100 dark:bg-gray-700 rounded-2xl focus:outline-none focus:border-blue-500">{{ old('reason_other') }}</textarea>
                 </div>
             </div>
 
@@ -60,4 +69,20 @@
         </form>
     </div>
 </div>
+
+<script>
+function toggleReturnReasonOther() {
+    const select = document.getElementById('return-reason');
+    const otherReason = document.getElementById('return-reason-other');
+    const needsOtherReason = select.value === 'Others';
+
+    otherReason.classList.toggle('hidden', !needsOtherReason);
+    otherReason.required = needsOtherReason;
+    if (!needsOtherReason) {
+        otherReason.value = '';
+    }
+}
+
+window.addEventListener('load', toggleReturnReasonOther);
+</script>
 @endsection

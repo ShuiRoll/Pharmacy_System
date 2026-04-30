@@ -32,9 +32,10 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                     @forelse($alerts as $alert)
+                        @php($isLowStockAlert = str_replace('_', ' ', strtolower($alert->alert_type)) === 'low stock')
                         <tr class="transition hover:bg-slate-50/80 dark:hover:bg-slate-800/60">
                             <td class="px-6 py-5">
-                                <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $alert->alert_type == 'Low_Stock' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-200' : 'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-200' }}">
+                                <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $isLowStockAlert ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-200' : 'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-200' }}">
                                     {{ $alert->alert_type }}
                                 </span>
                             </td>
@@ -50,6 +51,12 @@
                             </td>
                             <td class="px-6 py-5 text-right">
                                 @if(!$alert->is_resolved)
+                                    @if($isLowStockAlert && $alert->item)
+                                        <a href="{{ route('purchase-orders.create', ['item_id' => $alert->itemID]) }}" class="mr-4 inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+                                            <i class="fas fa-plus"></i>
+                                            Create Order
+                                        </a>
+                                    @endif
                                     <form action="{{ route('system-alerts.update', $alert) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PUT')

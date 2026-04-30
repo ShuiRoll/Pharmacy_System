@@ -70,7 +70,7 @@
                         <th class="px-6 py-4 text-right font-semibold">Unit Cost</th>
                         <th class="px-6 py-4 text-right font-semibold">Current SRP</th>
                         <th class="px-6 py-4 text-right font-semibold">Retail Value</th>
-                        <th class="px-6 py-4 text-center font-semibold">Status</th>
+                        <th class="w-36 px-6 py-4 text-center font-semibold">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-800">
@@ -87,15 +87,15 @@
                             <td class="px-6 py-5 text-right text-slate-300">PHP {{ number_format($batch->unit_cost ?? 0, 2) }}</td>
                             <td class="px-6 py-5 text-right text-slate-300">PHP {{ number_format($item->price, 2) }}</td>
                             <td class="px-6 py-5 text-right font-semibold text-white">PHP {{ number_format($batch->current_quantity * $item->price, 2) }}</td>
-                            <td class="px-6 py-5 text-center">
+                            <td class="w-36 px-6 py-5 text-center">
                                 @if($batch->current_quantity <= 0)
-                                    <span class="rounded-full bg-slate-500/15 px-3 py-1 text-xs font-semibold text-slate-300">Empty</span>
+                                    <span class="inline-flex min-w-24 items-center justify-center whitespace-nowrap rounded-full bg-slate-500/15 px-3 py-1 text-xs font-semibold text-slate-300">Empty</span>
                                 @elseif($isExpired)
-                                    <span class="rounded-full bg-rose-500/15 px-3 py-1 text-xs font-semibold text-rose-200">Expired</span>
+                                    <span class="inline-flex min-w-24 items-center justify-center whitespace-nowrap rounded-full bg-rose-500/15 px-3 py-1 text-xs font-semibold text-rose-200">Expired</span>
                                 @elseif($isNearExpiry)
-                                    <span class="rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-200">Near Expiry</span>
+                                    <span class="inline-flex min-w-24 items-center justify-center whitespace-nowrap rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-200">Near Expiry</span>
                                 @else
-                                    <span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-200">Good</span>
+                                    <span class="inline-flex min-w-24 items-center justify-center whitespace-nowrap rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-200">Good</span>
                                 @endif
                             </td>
                         </tr>

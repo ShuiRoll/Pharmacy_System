@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Schema;
 
 class SaleController extends Controller
 {
+    private const TAX_RATE = 0.12;
+
     public function index()
     {
         $sales = Schema::hasTable('sales') && Schema::hasTable('sale_lines')
@@ -39,7 +41,10 @@ class SaleController extends Controller
             }])->get();
         }
 
-        return view('sales.create', compact('items'));
+        return view('sales.create', [
+            'items' => $items,
+            'taxRate' => self::TAX_RATE,
+        ]);
     }
 
     public function store(Request $request)
@@ -61,10 +66,13 @@ class SaleController extends Controller
                 'payment_method' => $request->payment_method,
                 'gcash_reference' => $request->payment_method === 'GCash' ? $request->gcash_reference : null,
                 'card_reference' => $request->payment_method === 'Card' ? $request->card_reference : null,
+                'subtotal' => 0,
+                'tax_rate' => self::TAX_RATE,
+                'tax_amount' => 0,
                 'total' => 0,
             ]);
 
-            $total = 0;
+            $subtotal = 0;
 
             foreach ($request->items as $data) {
                 $item = Item::findOrFail($data['item_id']);
@@ -92,7 +100,7 @@ class SaleController extends Controller
 
                     $quantityFromBatch = min($remainingQuantity, $batch->current_quantity);
                     $lineTotal = $item->price * $quantityFromBatch;
-                    $total += $lineTotal;
+                    $subtotal += $lineTotal;
 
                     SaleLine::create([
                         'saleID' => $sale->saleID,
@@ -107,7 +115,13 @@ class SaleController extends Controller
                 }
             }
 
-            $sale->update(['total' => $total]);
+            $taxAmount = round($subtotal * self::TAX_RATE, 2);
+            $sale->update([
+                'subtotal' => $subtotal,
+                'tax_rate' => self::TAX_RATE,
+                'tax_amount' => $taxAmount,
+                'total' => $subtotal + $taxAmount,
+            ]);
 
             DB::commit();
 
@@ -122,22 +136,35 @@ class SaleController extends Controller
 
     public function show(Sale $sale)
     {
-        $sale->load('user', 'saleLines.item');
+        $sale->load([
+            'user',
+            'saleLines.item',
+            'saleLines.batch',
+            'saleReturns.user',
+            'saleReturns.returnLines.saleLine.item',
+        ]);
         return view('sales.show', compact('sale'));
     }
 
     public function dailyReport()
     {
-        $sales = Sale::whereDate('created_at', today())->with(['user', 'saleLines'])->get();
-        $total = $sales->sum('total');
+        $sales = Sale::whereDate('created_at', today())
+            ->with(['user', 'saleLines'])
+            ->withCount('saleReturns')
+            ->get();
+        $total = $sales->reject(fn (Sale $sale) => $sale->sale_returns_count > 0)->sum('total');
 
         return view('sales.reports.daily', compact('sales', 'total'));
     }
 
     public function monthlyReport()
     {
-        $sales = Sale::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->with(['user', 'saleLines'])->get();
-        $total = $sales->sum('total');
+        $sales = Sale::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->with(['user', 'saleLines'])
+            ->withCount('saleReturns')
+            ->get();
+        $total = $sales->reject(fn (Sale $sale) => $sale->sale_returns_count > 0)->sum('total');
 
         return view('sales.reports.monthly', compact('sales', 'total'));
     }

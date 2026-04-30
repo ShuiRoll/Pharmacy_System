@@ -72,6 +72,10 @@
 
 <script>
 let poLineCount = 0;
+const initialPoLine = @json($prefillItem ? [
+    'item_id' => $prefillItem->itemID,
+    'quantity' => $prefillQuantity,
+] : null);
 
 function addPoLine(line = {}) {
     const container = document.getElementById('po-lines');
@@ -106,6 +110,6 @@ function addPoLine(line = {}) {
     poLineCount++;
 }
 
-window.addEventListener('load', () => addPoLine());
+window.addEventListener('load', () => addPoLine(initialPoLine || {}));
 </script>
 @endsection

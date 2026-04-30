@@ -39,7 +39,7 @@
         </thead>
         <tbody class="divide-y">
             @forelse($sales as $sale)
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <tr onclick="window.location='{{ route('sales.show', $sale) }}'" class="cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700" title="View sale details">
                     <td class="p-6 font-mono">#{{ str_pad($sale->saleID, 5, '0', STR_PAD_LEFT) }}</td>
                     <td class="p-6">{{ $sale->sold_at?->format('M d, Y - h:i A') ?? $sale->created_at?->format('M d, Y - h:i A') }}</td>
                     <td class="p-6">{{ $sale->user->name ?? '-' }}</td>

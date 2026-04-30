@@ -6,7 +6,7 @@
 <div class="mx-auto max-w-5xl">
     <div class="mb-8">
         <h1 class="text-3xl font-bold">New Cycle Count</h1>
-        <p class="text-gray-600 dark:text-gray-400">Count stock and create matching inventory adjustments when completed</p>
+        <p class="text-gray-600 dark:text-gray-400">Plan the batches to count. Quantity changes are entered when the count is completed.</p>
     </div>
 
     <div class="rounded-3xl bg-white p-10 shadow-sm dark:bg-gray-800">
@@ -22,10 +22,7 @@
 
                 <div>
                     <label class="mb-2 block text-sm font-medium">Status</label>
-                    <select name="status" class="w-full rounded-2xl bg-gray-100 px-6 py-4 focus:outline-none dark:bg-gray-700">
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                    </select>
+                    <div class="w-full rounded-2xl bg-gray-100 px-6 py-4 text-gray-600 dark:bg-gray-700 dark:text-gray-300">Incomplete</div>
                 </div>
             </div>
 
@@ -33,7 +30,7 @@
                 <div class="mb-4 flex items-center justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold">Cycle Count Lines</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Expected quantity comes from the selected batch. Actual quantity is expected plus the quantity change.</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Expected quantity comes from the selected batch. Quantity change starts at 0 and is locked until completion.</p>
                     </div>
                     <button type="button" onclick="addCountLine()" class="rounded-full border border-blue-500/50 px-4 py-2 text-sm font-medium text-blue-200">
                         Add Item
@@ -45,7 +42,7 @@
 
             <div class="mt-12 flex gap-4">
                 <button type="submit" class="flex-1 rounded-2xl bg-blue-600 py-4 font-medium text-white hover:bg-blue-700">
-                    Save Cycle Count
+                    Plan Cycle Count
                 </button>
                 <a href="{{ route('cycle-counts.index') }}" class="flex-1 rounded-2xl border border-gray-300 py-4 text-center font-medium dark:border-gray-600">
                     Cancel
@@ -74,7 +71,7 @@ function addCountLine(line = {}) {
     const row = document.createElement('div');
     const selectedBatch = line.batchID || '';
     const expected = selectedBatch && batchLookup[selectedBatch] ? batchLookup[selectedBatch].expected : 0;
-    const change = line.quantity_changed || 0;
+    const change = 0;
 
     row.className = 'grid grid-cols-12 gap-4 rounded-2xl bg-gray-100 p-4 dark:bg-gray-700';
     row.innerHTML = `
@@ -95,7 +92,7 @@ function addCountLine(line = {}) {
         </div>
         <div class="col-span-6 md:col-span-2">
             <label class="mb-1 block text-xs font-medium">Quantity Change</label>
-            <input type="number" name="lines[${lineIndex}][quantity_changed]" value="${change}" required oninput="syncCountLine(this)" class="w-full rounded-2xl bg-white px-4 py-3 dark:bg-gray-800">
+            <input type="number" value="0" readonly class="w-full rounded-2xl bg-white px-4 py-3 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
         </div>
         <div class="col-span-6 md:col-span-2">
             <label class="mb-1 block text-xs font-medium">Actual</label>
@@ -114,7 +111,7 @@ function syncCountLine(input) {
     const row = input.closest('.grid');
     const batchID = row.querySelector('select').value;
     const expected = batchID && batchLookup[batchID] ? Number(batchLookup[batchID].expected) : 0;
-    const change = Number(row.querySelector('[name$="[quantity_changed]"]').value || 0);
+    const change = 0;
 
     row.querySelector('[data-expected]').value = expected;
     row.querySelector('[data-actual]').value = expected + change;

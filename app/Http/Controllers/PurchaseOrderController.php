@@ -17,12 +17,18 @@ class PurchaseOrderController extends Controller
         return redirect()->to(route('suppliers.index').'#purchasing');
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $suppliers = Schema::hasTable('suppliers') ? Supplier::all() : collect();
         $items = Schema::hasTable('items') ? Item::orderBy('name')->get() : collect();
+        $prefillItem = Schema::hasTable('items') && $request->filled('item_id')
+            ? Item::with('inventoryBatches')->find($request->integer('item_id'))
+            : null;
+        $prefillQuantity = $prefillItem
+            ? max(1, (int) $prefillItem->minimum_stock_lvl - (int) $prefillItem->inventoryBatches->sum('current_quantity'))
+            : null;
 
-        return view('purchase_orders.create', compact('suppliers', 'items'));
+        return view('purchase_orders.create', compact('suppliers', 'items', 'prefillItem', 'prefillQuantity'));
     }
 
     public function store(Request $request)

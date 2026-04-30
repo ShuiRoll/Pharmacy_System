@@ -33,48 +33,52 @@ class CycleCountController extends Controller
     {
         $validated = $request->validate([
             'count_date' => 'required|date',
-            'status' => 'required|in:In Progress,Completed',
             'lines' => 'required|array|min:1',
             'lines.*.batchID' => 'required|exists:inventory_batches,batchID',
-            'lines.*.quantity_changed' => 'required|integer',
         ]);
 
         DB::transaction(function () use ($validated): void {
             $cycleCount = CycleCount::create([
                 'userID' => auth()->id(),
                 'count_date' => $validated['count_date'],
-                'status' => $validated['status'],
+                'status' => 'Incomplete',
             ]);
 
             foreach ($validated['lines'] as $lineData) {
                 $batch = InventoryBatch::lockForUpdate()->findOrFail($lineData['batchID']);
                 $expectedQuantity = $batch->current_quantity;
-                $quantityChanged = (int) $lineData['quantity_changed'];
-                $actualQuantity = $expectedQuantity + $quantityChanged;
 
-                if ($actualQuantity < 0) {
-                    throw new \RuntimeException('Actual quantity cannot be negative for '.$batch->item->name.'.');
-                }
-
-                $line = CycleCountLine::create([
+                CycleCountLine::create([
                     'countID' => $cycleCount->countID,
                     'batchID' => $batch->batchID,
                     'expected_quantity' => $expectedQuantity,
-                    'actual_quantity' => $actualQuantity,
+                    'actual_quantity' => $expectedQuantity,
                 ]);
-
-                if ($validated['status'] === 'Completed' && $quantityChanged !== 0) {
-                    $this->applyCycleCountAdjustment($line, $quantityChanged);
-                }
             }
         });
 
         return redirect()->route('cycle-counts.index')
-            ->with('success', 'Cycle Count started successfully.');
+            ->with('success', 'Cycle Count planned successfully.');
+    }
+
+    public function show(CycleCount $cycleCount)
+    {
+        $cycleCount->load([
+            'user',
+            'cycleCountLines.batch.item',
+            'cycleCountLines.batch.location',
+            'cycleCountLines.inventoryAdjustment.user',
+        ]);
+
+        return view('cycle_counts.show', compact('cycleCount'));
     }
 
     public function edit(CycleCount $cycleCount)
     {
+        if ($cycleCount->status === 'Completed') {
+            return redirect()->route('cycle-counts.show', $cycleCount);
+        }
+
         $cycleCount->load(['cycleCountLines.batch.item', 'cycleCountLines.inventoryAdjustment']);
         $batches = Schema::hasTable('inventory_batches') && Schema::hasTable('items')
             ? InventoryBatch::with('item')->orderBy('itemID')->orderBy('expiration_date')->get()
@@ -86,29 +90,32 @@ class CycleCountController extends Controller
     public function update(Request $request, CycleCount $cycleCount)
     {
         $validated = $request->validate([
-            'count_date' => 'required|date',
-            'status' => 'required|in:In Progress,Completed',
             'lines' => 'required|array|min:1',
             'lines.*.batchID' => 'required|exists:inventory_batches,batchID',
             'lines.*.quantity_changed' => 'required|integer',
+            'lines.*.reason' => 'nullable|string|max:255',
+            'lines.*.reason_other' => 'nullable|string|max:255',
         ]);
 
-        DB::transaction(function () use ($cycleCount, $validated): void {
-            $cycleCount->load('cycleCountLines.inventoryAdjustment');
-
-            if ($cycleCount->cycleCountLines->contains(fn ($line) => $line->inventoryAdjustment)) {
-                $cycleCount->update([
-                    'count_date' => $validated['count_date'],
-                    'status' => $cycleCount->status,
-                ]);
-
-                return;
+        foreach ($validated['lines'] as $lineData) {
+            if ((int) $lineData['quantity_changed'] !== 0 && empty($lineData['reason'])) {
+                return back()->withInput()->withErrors(['lines' => 'Choose a reason for every non-zero quantity change.']);
             }
 
-            $cycleCount->update([
-                'count_date' => $validated['count_date'],
-                'status' => $validated['status'],
-            ]);
+            if (($lineData['reason'] ?? null) === 'Others' && empty($lineData['reason_other'])) {
+                return back()->withInput()->withErrors(['lines' => 'Enter a reason when Others is selected.']);
+            }
+        }
+
+        $cycleCount->load('cycleCountLines.inventoryAdjustment');
+
+        if ($cycleCount->status === 'Completed' || $cycleCount->cycleCountLines->contains(fn ($line) => $line->inventoryAdjustment)) {
+            return redirect()->route('cycle-counts.show', $cycleCount)
+                ->with('error', 'Completed cycle counts cannot be changed.');
+        }
+
+        DB::transaction(function () use ($cycleCount, $validated): void {
+            $cycleCount->update(['status' => 'Completed']);
 
             $cycleCount->cycleCountLines()->delete();
 
@@ -129,24 +136,32 @@ class CycleCountController extends Controller
                     'actual_quantity' => $actualQuantity,
                 ]);
 
-                if ($validated['status'] === 'Completed' && $quantityChanged !== 0) {
-                    $this->applyCycleCountAdjustment($line, $quantityChanged);
+                if ($quantityChanged !== 0) {
+                    $reason = $lineData['reason'] === 'Others'
+                        ? ($lineData['reason_other'] ?: 'Other cycle count adjustment')
+                        : ($lineData['reason'] ?: 'Cycle count #'.str_pad((string) $cycleCount->countID, 5, '0', STR_PAD_LEFT));
+
+                    $this->applyCycleCountAdjustment(
+                        $line,
+                        $quantityChanged,
+                        $reason
+                    );
                 }
             }
         });
 
-        return redirect()->route('cycle-counts.index')
-            ->with('success', 'Cycle Count updated successfully.');
+        return redirect()->route('cycle-counts.show', $cycleCount)
+            ->with('success', 'Cycle Count completed successfully.');
     }
 
-    private function applyCycleCountAdjustment(CycleCountLine $line, int $quantityChanged): void
+    private function applyCycleCountAdjustment(CycleCountLine $line, int $quantityChanged, string $reason): void
     {
         InventoryAdjustment::create([
             'batchID' => $line->batchID,
             'userID' => auth()->id(),
             'adjustment_date' => now()->toDateString(),
             'quantity_changed' => $quantityChanged,
-            'reason' => 'Cycle count #'.str_pad((string) $line->countID, 5, '0', STR_PAD_LEFT),
+            'reason' => $reason,
             'cycle_count_lineID' => $line->lineID,
         ]);
 

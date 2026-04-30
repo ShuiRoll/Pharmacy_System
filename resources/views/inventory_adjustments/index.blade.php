@@ -31,7 +31,6 @@
                 <a href="{{ route('items.near-expiry') }}" class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white transition hover:border-orange-400/40 hover:bg-orange-500/10 hover:text-orange-200">Near Expiry</a>
                 <a href="{{ route('cycle-counts.index') }}" class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white transition hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-blue-200">Cycle Counts</a>
                 <a href="{{ route('outbound.create') }}" class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white transition hover:border-rose-400/40 hover:bg-rose-500/10 hover:text-rose-200">New Outbound</a>
-                <a href="{{ route('inventory-adjustments.create') }}" class="inline-flex items-center rounded-full border border-blue-500/50 bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"><i class="fas fa-plus mr-1.5"></i>Record Adjustment</a>
             </div>
         </div>
 

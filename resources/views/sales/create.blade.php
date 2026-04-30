@@ -84,9 +84,19 @@
             <div id="cart-items" class="mt-5 max-h-72 space-y-3 overflow-y-auto"></div>
 
             <div class="mt-5 rounded-lg border border-white/10 bg-white/5 p-4">
-                <div class="flex items-center justify-between">
-                    <span class="text-sm text-slate-300">Total Amount</span>
-                    <span id="cart-total" class="text-3xl font-bold text-white">&#8369;0.00</span>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-slate-300">Subtotal</span>
+                        <span id="cart-subtotal" class="font-semibold text-white">&#8369;0.00</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-slate-300">VAT ({{ number_format($taxRate * 100, 0) }}%)</span>
+                        <span id="cart-tax" class="font-semibold text-white">&#8369;0.00</span>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/10 pt-3">
+                        <span class="text-sm text-slate-300">Total Amount</span>
+                        <span id="cart-total" class="text-3xl font-bold text-white">&#8369;0.00</span>
+                    </div>
                 </div>
             </div>
 
@@ -138,6 +148,7 @@
 
 <script>
 let cart = [];
+const TAX_RATE = {{ json_encode($taxRate) }};
 
 function peso(value) {
     return `&#8369;${Number(value || 0).toFixed(2)}`;
@@ -168,7 +179,7 @@ function renderCart() {
     const container = document.getElementById('cart-items');
     container.innerHTML = '';
 
-    let total = 0;
+    let subtotal = 0;
 
     if (!cart.length) {
         container.innerHTML = '<div class="rounded-lg border border-dashed border-white/20 p-6 text-center text-sm text-slate-300">No products in the cart.</div>';
@@ -176,7 +187,7 @@ function renderCart() {
 
     cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
-        total += itemTotal;
+        subtotal += itemTotal;
 
         const row = document.createElement('div');
         row.className = 'grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-4';
@@ -193,6 +204,11 @@ function renderCart() {
         container.appendChild(row);
     });
 
+    const taxAmount = subtotal * TAX_RATE;
+    const total = subtotal + taxAmount;
+
+    document.getElementById('cart-subtotal').innerHTML = peso(subtotal);
+    document.getElementById('cart-tax').innerHTML = peso(taxAmount);
     document.getElementById('cart-total').innerHTML = peso(total);
     document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
 }

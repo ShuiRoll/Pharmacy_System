@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/outbound/{outbound}/ship', [OutboundTransactionController::class, 'ship'])->name('outbound.ship');
         Route::patch('/outbound/{outbound}/deliver', [OutboundTransactionController::class, 'deliver'])->name('outbound.deliver');
 
-        Route::resource('cycle-counts', CycleCountController::class)->only(['index', 'create', 'store', 'edit', 'update']);
+        Route::resource('cycle-counts', CycleCountController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
         Route::resource('inventory-adjustments', InventoryAdjustmentController::class)->only(['index', 'create', 'store']);
         Route::resource('system-alerts', SystemAlertController::class)->only(['index', 'update']);
         Route::resource('users', UserController::class)->except(['show']);
@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('sales.create');
         });
 
-        Route::resource('sales', SaleController::class)->only(['index', 'create', 'store']);
+        Route::resource('sales', SaleController::class)->only(['index', 'create', 'store', 'show']);
         Route::resource('sale-returns', SaleReturnController::class)->only(['index', 'create', 'store']);
         Route::get('/reports/daily', [SaleController::class, 'dailyReport'])->name('reports.daily');
         Route::get('/reports/monthly', [SaleController::class, 'monthlyReport'])->name('reports.monthly');

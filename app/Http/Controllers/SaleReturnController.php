@@ -41,9 +41,15 @@ class SaleReturnController extends Controller
                 'exists:sales,saleID',
                 Rule::unique('sale_returns', 'saleID'),
             ],
-            'reason' => 'required|string',
+            'reason' => 'required|string|max:255',
+            'reason_other' => 'required_if:reason,Others|nullable|string|max:255',
             'return_date' => 'required|date',
         ]);
+
+        $validated['reason'] = $validated['reason'] === 'Others'
+            ? $validated['reason_other']
+            : $validated['reason'];
+        unset($validated['reason_other']);
 
         DB::transaction(function () use ($validated): void {
             $sale = Sale::with('saleLines.batch')->findOrFail($validated['saleID']);
