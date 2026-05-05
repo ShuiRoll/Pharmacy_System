@@ -51,7 +51,7 @@
                     @if($user->role === 'admin')
                         <a href="{{ route('items.index') }}" class="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-5 py-4 transition hover:border-blue-400 hover:bg-blue-500/10">
                             <div>
-                                <p class="font-medium text-white">Inventory Hub</p>
+                                <p class="font-medium text-white">Item Hub</p>
                                 <p class="text-sm text-white">Items, locations, and stock</p>
                             </div>
                             <i class="fas fa-arrow-right text-white transition group-hover:text-white"></i>
