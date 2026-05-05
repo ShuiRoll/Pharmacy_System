@@ -13,7 +13,7 @@
     <div class="relative mx-auto px-6 py-10 sm:px-8 sm:py-12">
         <div class="grid w-full gap-8 lg:grid-cols-[1.15fr_0.85fr]">
             <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-10">
-                <div class="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200">
+                <div class="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
                     <span class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/20 text-blue-200">
                         <i class="fa-solid fa-capsules"></i>
                     </span>
@@ -84,25 +84,25 @@
                         <a href="{{ route('sales.create') }}" class="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-5 py-4 transition hover:border-blue-400 hover:bg-blue-500/10">
                             <div>
                                 <p class="font-medium text-white">Open POS</p>
-                                <p class="text-sm text-slate-400">Start a new sale</p>
+                                <p class="text-sm text-white/80">Start a new sale</p>
                             </div>
-                            <i class="fas fa-arrow-right text-slate-400 transition group-hover:text-white"></i>
+                            <i class="fas fa-arrow-right text-white/80 transition group-hover:text-white"></i>
                         </a>
 
                         <a href="{{ route('sales.index') }}" class="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-5 py-4 transition hover:border-blue-400 hover:bg-blue-500/10">
                             <div>
                                 <p class="font-medium text-white">Sales History</p>
-                                <p class="text-sm text-slate-400">View recent transactions</p>
+                                <p class="text-sm text-white/80">View recent transactions</p>
                             </div>
-                            <i class="fas fa-arrow-right text-slate-400 transition group-hover:text-white"></i>
+                            <i class="fas fa-arrow-right text-white/80 transition group-hover:text-white"></i>
                         </a>
 
                         <a href="{{ route('sale-returns.index') }}" class="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-5 py-4 transition hover:border-blue-400 hover:bg-blue-500/10">
                             <div>
                                 <p class="font-medium text-white">Returns</p>
-                                <p class="text-sm text-slate-400">Process return requests</p>
+                                <p class="text-sm text-white/80">Process return requests</p>
                             </div>
-                            <i class="fas fa-arrow-right text-slate-400 transition group-hover:text-white"></i>
+                            <i class="fas fa-arrow-right text-white/80 transition group-hover:text-white"></i>
                         </a>
                     @endif
                 </div>

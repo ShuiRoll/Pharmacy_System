@@ -6,7 +6,7 @@
 <div class="flex justify-between items-center mb-8">
     <div>
         <h1 class="text-3xl font-bold">Purchase Orders</h1>
-        <p class="text-gray-600 dark:text-gray-400">Manage orders placed with suppliers</p>
+        <p class="text-white/80">Manage orders placed with suppliers</p>
     </div>
     <a href="{{ route('purchase-orders.create') }}" 
        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-medium flex items-center gap-2">
@@ -36,32 +36,29 @@
                 <td class="p-6">{{ $po->expected_date ? $po->expected_date->format('M d, Y') : '—' }}</td>
                 <td class="p-6 text-right font-semibold">₱{{ number_format($po->total_amount ?? 0, 2) }}</td>
                 <td class="p-6 text-center">
-                    <span class="px-4 py-1 rounded-full text-xs font-medium
-                        @if($po->status == 'Received') bg-green-100 text-green-700
-                        @elseif($po->status == 'Approved') bg-blue-100 text-blue-700
-                        @else bg-yellow-100 text-yellow-700 @endif">
+                    <span class=\"status-pill {{ $po->status == 'Received' ? 'status-success' : ($po->status == 'Approved' ? 'status-warning' : '') }}\">
                         {{ $po->status }}
                     </span>
                 </td>
                 <td class="p-6 text-right">
-                    <div class="flex items-center justify-end flex-wrap gap-3">
-                        <a href="{{ route('purchase-orders.edit', $po) }}" class="text-blue-600 hover:underline">Edit</a>
+                    <div class="flex items-center justify-end flex-wrap gap-2">
+                        <a href="{{ route('purchase-orders.edit', $po) }}" class="table-action">Edit</a>
                         @if($po->status === 'Pending')
-                            <form action="{{ route('purchase-orders.approve', $po) }}" method="POST">
+                            <form action="{{ route('purchase-orders.approve', $po) }}" method="POST" class="inline">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" class="text-green-600 hover:underline">Approve</button>
+                                <button type="submit" class="table-action action-success">Approve</button>
                             </form>
-                            <form action="{{ route('purchase-orders.reject', $po) }}" method="POST">
+                            <form action="{{ route('purchase-orders.reject', $po) }}" method="POST" class="inline">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" class="text-amber-600 hover:underline">Reject</button>
+                                <button type="submit" class="table-action action-warning">Reject</button>
                             </form>
                         @endif
-                        <form action="{{ route('purchase-orders.destroy', $po) }}" method="POST" onsubmit="return confirm('Delete this purchase order?');">
+                        <form action="{{ route('purchase-orders.destroy', $po) }}" method="POST" onsubmit="return confirm('Delete this purchase order?');" class="inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                            <button type="submit" class="table-action action-danger">Delete</button>
                         </form>
                     </div>
                 </td>

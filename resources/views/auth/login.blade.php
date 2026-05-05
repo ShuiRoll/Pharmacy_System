@@ -14,7 +14,7 @@
         <div class="relative mx-auto flex min-h-screen max-w-7xl items-center justify-center px-6 py-12">
             <div class="grid w-full max-w-5xl gap-8 lg:grid-cols-[1.15fr_0.85fr]">
                 <div class="rounded-lg border border-white/10 bg-white/5 p-10 shadow-2xl shadow-black/20 backdrop-blur-xl">
-                    <div class="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200">
+                    <div class="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
                         <span class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/20 text-blue-200">
                             <i class="fa-solid fa-capsules"></i>
                         </span>
@@ -58,15 +58,15 @@
                         <div>
                             <label class="mb-2 block text-sm font-medium text-white">Email</label>
                             <input type="email" name="email" value="{{ old('email') }}" required autofocus
-                                   class="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white placeholder:text-slate-500 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30">
+                                class="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white placeholder:text-white/60 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30">
                         </div>
 
                         <div>
                             <label class="mb-2 block text-sm font-medium text-white">Password</label>
                             <div class="relative">
-                                <input id="login-password" type="password" name="password" required
-                                       class="w-full rounded-lg border border-white/10 bg-white/5 px-5 py-4 pr-12 text-white placeholder:text-slate-500 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30">
-                                <button type="button" data-password-toggle="#login-password" aria-label="Show password" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300">
+                                    <input id="login-password" type="password" name="password" required
+                                        class="w-full rounded-lg border border-white/10 bg-white/5 px-5 py-4 pr-12 text-white placeholder:text-white/60 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30">
+                                    <button type="button" data-password-toggle="#login-password" aria-label="Show password" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>

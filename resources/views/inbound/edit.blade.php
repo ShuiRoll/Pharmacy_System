@@ -6,7 +6,7 @@
 <div class="max-w-4xl mx-auto">
     <div class="mb-8">
         <h1 class="text-3xl font-bold">Edit Inbound Receipt</h1>
-        <p class="text-gray-600 dark:text-gray-400">Receipt #{{ str_pad($inbound->in_transactionID, 5, '0', STR_PAD_LEFT) }}</p>
+        <p class="text-white/80">Receipt #{{ str_pad($inbound->in_transactionID, 5, '0', STR_PAD_LEFT) }}</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm p-10">

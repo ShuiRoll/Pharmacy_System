@@ -5,18 +5,18 @@
 @section('content')
 @php
     $supplierCount = $suppliers->count();
-    $pendingOrders = $purchaseOrders->where('status', 'Pending')->count();
+    $pendingOrders = $pendingOrdersCount ?? 0;
     $receivingCount = $inbounds->count();
 @endphp
 
 <div class="space-y-8 text-left" style="text-align: left;" data-filter-scope>
     <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-xl shadow-black/20 backdrop-blur">
         <div class="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-white">
-            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-300">Filter</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">Filter</span>
             <button type="button" data-section-filter="all" class="rounded-full border border-blue-500/50 bg-blue-600 px-3 py-1 text-white transition hover:border-blue-400 hover:text-blue-100">All</button>
-            <button type="button" data-section-filter="suppliers" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-300 transition hover:border-blue-400 hover:text-blue-200">Directory</button>
-            <button type="button" data-section-filter="purchasing" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-300 transition hover:border-blue-400 hover:text-blue-200">Purchasing</button>
-            <button type="button" data-section-filter="receiving" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-300 transition hover:border-blue-400 hover:text-blue-200">Receiving</button>
+            <button type="button" data-section-filter="suppliers" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80 transition hover:border-blue-400 hover:text-white">Directory</button>
+            <button type="button" data-section-filter="purchasing" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80 transition hover:border-blue-400 hover:text-white">Purchasing</button>
+            <button type="button" data-section-filter="receiving" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80 transition hover:border-blue-400 hover:text-white">Receiving</button>
         </div>
         <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
@@ -66,7 +66,7 @@
                         <span class="mt-1 inline-flex h-3 w-3 rounded-full bg-emerald-400"></span>
                     </div>
 
-                    <div class="mt-4 space-y-2 text-sm text-slate-300">
+                    <div class="mt-4 space-y-2 text-sm text-white/80">
                         <p class="text-white">{{ $supplier->contact_number ?: 'No contact number' }}</p>
                     </div>
 
@@ -96,7 +96,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm" style="text-align: left;">
-                <thead class="bg-slate-50 text-left text-xs uppercase tracking-[0.2em] text-slate-800 dark:bg-slate-800/70 dark:text-slate-400">
+                <thead class="bg-slate-900/50 text-left text-xs uppercase tracking-[0.2em] text-white/80">
                     <tr>
                         <th class="px-6 py-4 font-semibold">PO Number</th>
                         <th class="px-6 py-4 font-semibold">Supplier</th>
@@ -107,60 +107,104 @@
                         <th class="px-6 py-4 text-right font-semibold">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody class="divide-y divide-white/10">
                     @forelse($purchaseOrders as $po)
-                        <tr class="transition hover:bg-slate-50/80 dark:hover:bg-slate-800/60">
-                            <td class="px-6 py-5 font-mono text-xs font-semibold text-slate-800 dark:text-white">PO-{{ str_pad($po->poID, 4, '0', STR_PAD_LEFT) }}</td>
-                            <td class="px-6 py-5 text-slate-800 dark:text-white">{{ $po->supplier->supplier_name ?? '—' }}</td>
-                            <td class="px-6 py-5 text-slate-700 dark:text-white">{{ $po->po_date ? $po->po_date->format('M d, Y') : '—' }}</td>
-                            <td class="px-6 py-5 text-slate-700 dark:text-white">{{ $po->expected_date ? $po->expected_date->format('M d, Y') : '—' }}</td>
-                            <td class="px-6 py-5 text-right font-semibold text-slate-800 dark:text-white">₱{{ number_format($po->total_amount ?? 0, 2) }}</td>
+                        <tr class="transition hover:bg-white/5">
+                            <td class="px-6 py-5 font-mono text-xs font-semibold text-white">PO-{{ str_pad($po->poID, 4, '0', STR_PAD_LEFT) }}</td>
+                            <td class="px-6 py-5 text-white">{{ $po->supplier->supplier_name ?? '—' }}</td>
+                            <td class="px-6 py-5 text-white/80">{{ $po->po_date ? $po->po_date->format('M d, Y') : '—' }}</td>
+                            <td class="px-6 py-5 text-white/80">{{ $po->expected_date ? $po->expected_date->format('M d, Y') : '—' }}</td>
+                            <td class="px-6 py-5 text-right font-semibold text-white">₱{{ number_format($po->total_amount ?? 0, 2) }}</td>
                             <td class="px-6 py-5 text-center">
-                                <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $po->status == 'Received' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200' : ($po->status == 'Approved' ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-200' : 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-200') }}">{{ $po->status }}</span>
+                                <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $po->status == 'Received' ? 'bg-emerald-500/20 text-emerald-100 ring-1 ring-emerald-400/30' : ($po->status == 'Approved' ? 'bg-blue-500/20 text-blue-100 ring-1 ring-blue-400/30' : 'bg-amber-500/20 text-amber-100 ring-1 ring-amber-400/30') }}">{{ $po->status }}</span>
                             </td>
                             <td class="px-6 py-5 text-right">
                                 <div class="flex items-center justify-end gap-3">
-                                    <a href="{{ route('purchase-orders.edit', $po) }}" class="font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-200">Edit</a>
-                                    @if($po->status === 'Pending')
-                                        <form action="{{ route('purchase-orders.approve', $po) }}" method="POST">
+                                    <button type="button" onclick="document.getElementById('po-details-{{ $po->poID }}').classList.toggle('hidden')" class="rounded-full border border-blue-400/40 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-100 transition hover:border-blue-300/70 hover:bg-blue-500/20">
+                                        View Details
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="po-details-{{ $po->poID }}" class="hidden bg-slate-950/35">
+                            <td colspan="7" class="px-6 py-5">
+                                <div class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                    <div class="text-sm text-white">
+                                        <p class="font-semibold text-white">PO-{{ str_pad($po->poID, 4, '0', STR_PAD_LEFT) }} details</p>
+                                        <p class="mt-1 text-white/80">Manage approval flow and order updates from one panel.</p>
+                                    </div>
+
+                                    <div class="flex flex-wrap justify-end gap-2">
+                                        <a href="{{ route('purchase-orders.edit', $po) }}" class="rounded-full border border-blue-400/40 bg-blue-500/10 px-4 py-2 text-xs font-semibold text-blue-100 transition hover:border-blue-300/70 hover:bg-blue-500/20">Edit</a>
+                                        @if($po->status === 'Pending')
+                                            <form action="{{ route('purchase-orders.approve', $po) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-xs font-semibold text-emerald-100 transition hover:border-emerald-300/70 hover:bg-emerald-500/20">Accept</button>
+                                            </form>
+                                            <form action="{{ route('purchase-orders.reject', $po) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="rounded-full border border-amber-400/40 bg-amber-500/10 px-4 py-2 text-xs font-semibold text-amber-100 transition hover:border-amber-300/70 hover:bg-amber-500/20">Reject</button>
+                                            </form>
+                                        @endif
+                                        <form action="{{ route('purchase-orders.destroy', $po) }}" method="POST" onsubmit="return confirm('Delete this purchase order?');">
                                             @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="font-medium text-emerald-600 transition hover:text-emerald-700 dark:text-emerald-300 dark:hover:text-emerald-200">Approve</button>
+                                            @method('DELETE')
+                                            <button type="submit" class="rounded-full border border-rose-400/40 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-100 transition hover:border-rose-300/70 hover:bg-rose-500/20">Delete</button>
                                         </form>
-                                        <form action="{{ route('purchase-orders.reject', $po) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="font-medium text-amber-600 transition hover:text-amber-700 dark:text-amber-300 dark:hover:text-amber-200">Reject</button>
-                                        </form>
-                                    @endif
-                                    <form action="{{ route('purchase-orders.destroy', $po) }}" method="POST" onsubmit="return confirm('Delete this purchase order?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="font-medium text-rose-600 transition hover:text-rose-700 dark:text-rose-300 dark:hover:text-rose-200">Delete</button>
-                                    </form>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="px-6 py-10 text-center text-sm text-slate-700 dark:text-white">No purchase orders yet.</td></tr>
+                        <tr><td colspan="7" class="px-6 py-10 text-center text-sm text-white/80">No purchase orders yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
+        @if($purchaseOrders instanceof \Illuminate\Pagination\LengthAwarePaginator && $purchaseOrders->hasPages())
+            <div class="border-t border-white/10 px-6 py-4">
+                <div class="flex items-center justify-end gap-2 text-xs font-semibold text-white/80 sm:text-sm">
+                    <span class="mr-2">Page {{ $purchaseOrders->currentPage() }} of {{ $purchaseOrders->lastPage() }}</span>
+
+                    @if($purchaseOrders->onFirstPage())
+                        <span class="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-white/70">Prev</span>
+                    @else
+                        <a href="{{ $purchaseOrders->previousPageUrl() }}" class="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-white transition hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white">Prev</a>
+                    @endif
+
+                    @for($page = 1; $page <= $purchaseOrders->lastPage(); $page++)
+                        @if($page === $purchaseOrders->currentPage())
+                            <span class="rounded-lg border border-blue-500/50 bg-blue-600 px-3 py-1.5 text-white">{{ $page }}</span>
+                        @else
+                            <a href="{{ $purchaseOrders->url($page) }}" class="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-white transition hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white">{{ $page }}</a>
+                        @endif
+                    @endfor
+
+                    @if($purchaseOrders->hasMorePages())
+                        <a href="{{ $purchaseOrders->nextPageUrl() }}" class="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-white transition hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white">Next</a>
+                    @else
+                        <span class="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-white/70">Next</span>
+                    @endif
+                </div>
+            </div>
+        @endif
     </section>
 
     <section id="receiving" data-filter-section="receiving" class="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 text-left shadow-xl shadow-black/20 backdrop-blur" style="text-align: left;">
         <div class="flex flex-col items-start gap-4 border-b border-white/10 px-6 py-5 sm:flex-row sm:justify-between">
             <div class="text-left" style="text-align: left;">
                 <h2 class="text-xl font-semibold text-white">Receiving</h2>
-                <p class="text-sm text-slate-300">Inbound receipts from suppliers</p>
+                <p class="text-sm text-white/80">Inbound receipts from suppliers</p>
             </div>
-            <a href="{{ route('inbound.create') }}" class="self-start rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-emerald-400/40 hover:bg-emerald-500/10 hover:text-emerald-200">New Receipt</a>
+            <a href="{{ route('inbound.create') }}" class="self-start rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:border-emerald-400/40 hover:bg-emerald-500/10 hover:text-white">New Receipt</a>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm" style="text-align: left;">
-                <thead class="bg-slate-50 text-left text-xs uppercase tracking-[0.2em] text-slate-800 dark:bg-slate-800/70 dark:text-slate-400">
+                <thead class="bg-slate-900/50 text-left text-xs uppercase tracking-[0.2em] text-white/80">
                     <tr>
                         <th class="px-6 py-4 font-semibold">Receipt</th>
                         <th class="px-6 py-4 font-semibold">PO</th>
@@ -173,26 +217,26 @@
                         <th class="px-6 py-4 text-right font-semibold">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody class="divide-y divide-white/10">
                     @forelse($inbounds as $inbound)
-                        <tr class="transition hover:bg-slate-50/80 dark:hover:bg-slate-800/60">
-                            <td class="px-6 py-5 font-mono text-xs font-semibold text-slate-600 dark:text-slate-300">
-                                <button type="button" onclick="document.getElementById('receipt-details-{{ $inbound->in_transactionID }}').classList.toggle('hidden')" class="text-blue-300 hover:text-blue-200">
+                        <tr class="transition hover:bg-white/5">
+                            <td class="px-6 py-5 font-mono text-xs font-semibold text-white/80">
+                                <button type="button" onclick="document.getElementById('receipt-details-{{ $inbound->in_transactionID }}').classList.toggle('hidden')" class="table-action" style="padding: 0.4rem 0.75rem; font-size: 0.75rem; min-height: auto;">
                                     #{{ str_pad($inbound->in_transactionID, 5, '0', STR_PAD_LEFT) }}
                                 </button>
                             </td>
-                            <td class="px-6 py-5 text-slate-900 dark:text-white">{{ $inbound->poID ? 'PO-'.str_pad($inbound->poID, 4, '0', STR_PAD_LEFT) : 'Direct' }}</td>
-                            <td class="px-6 py-5 text-slate-900 dark:text-white">{{ $inbound->purchaseOrder->supplier->supplier_name ?? 'Direct receipt' }}</td>
-                            <td class="px-6 py-5 text-slate-500 dark:text-slate-400">{{ $inbound->date_received?->format('M d, Y') }}</td>
-                            <td class="px-6 py-5 text-slate-900 dark:text-white">{{ $inbound->user->name ?? '—' }}</td>
-                            <td class="px-6 py-5 text-center"><span class="rounded-full px-3 py-1 text-xs font-semibold {{ $inbound->quality_status == 'Passed' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200' : 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-200' }}">{{ $inbound->quality_status }}</span></td>
-                            <td class="px-6 py-5 text-right font-semibold text-slate-900 dark:text-white">₱{{ number_format($inbound->total_cost ?? 0, 2) }}</td>
-                            <td class="px-6 py-5 text-center text-slate-500 dark:text-slate-400">{{ $inbound->inboundLineItems->count() }}</td>
+                            <td class="px-6 py-5 text-white">{{ $inbound->poID ? 'PO-'.str_pad($inbound->poID, 4, '0', STR_PAD_LEFT) : 'Direct' }}</td>
+                            <td class="px-6 py-5 text-white">{{ $inbound->purchaseOrder->supplier->supplier_name ?? 'Direct receipt' }}</td>
+                            <td class="px-6 py-5 text-white/80">{{ $inbound->date_received?->format('M d, Y') }}</td>
+                            <td class="px-6 py-5 text-white">{{ $inbound->user->name ?? '—' }}</td>
+                            <td class="px-6 py-5 text-center"><span class="status-pill {{ $inbound->quality_status == 'Passed' ? 'status-success' : 'status-warning' }}">{{ $inbound->quality_status }}</span></td>
+                            <td class="px-6 py-5 text-right font-semibold text-white">₱{{ number_format($inbound->total_cost ?? 0, 2) }}</td>
+                            <td class="px-6 py-5 text-center text-white/80">{{ $inbound->inboundLineItems->count() }}</td>
                             <td class="px-6 py-5 text-right">
-                                <div class="flex items-center justify-end gap-3">
-                                    <button type="button" onclick="document.getElementById('receipt-details-{{ $inbound->in_transactionID }}').classList.toggle('hidden')" class="font-medium text-blue-300 hover:text-blue-200">Details</button>
+                                <div class="flex items-center justify-end gap-2">
+                                    <button type="button" onclick="document.getElementById('receipt-details-{{ $inbound->in_transactionID }}').classList.toggle('hidden')" class="table-action">Details</button>
                                     @if($inbound->quality_status === 'Pending')
-                                        <a href="{{ route('inbound.edit', $inbound) }}" class="font-medium text-emerald-300 hover:text-emerald-200">Edit</a>
+                                        <a href="{{ route('inbound.edit', $inbound) }}" class="table-action action-success">Edit</a>
                                     @endif
                                 </div>
                             </td>
@@ -202,8 +246,8 @@
                                 <div class="rounded-lg border border-white/10 bg-white/5 p-4">
                                     <h3 class="mb-3 text-sm font-semibold text-white">Receipt line details</h3>
                                     <div class="overflow-x-auto">
-                                        <table class="w-full text-left text-xs text-slate-300">
-                                            <thead class="text-slate-400">
+                                        <table class="w-full text-left text-xs text-white/80">
+                                            <thead class="text-white/60">
                                                 <tr>
                                                     <th class="py-2">Medicine</th>
                                                     <th class="py-2">Lot</th>
@@ -229,7 +273,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="9" class="px-6 py-10 text-center text-sm text-slate-500 dark:text-slate-400">No receipts yet.</td></tr>
+                        <tr><td colspan="9" class="px-6 py-10 text-center text-sm text-white/70">No receipts yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -238,17 +282,17 @@
 
     @if(false)
     <section id="outbound" data-filter-section="outbound" class="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 text-left shadow-xl shadow-black/20 backdrop-blur" style="text-align: left;">
-        <div class="flex flex-col items-start gap-4 border-b border-slate-200 px-6 py-5 dark:border-slate-800 sm:flex-row sm:justify-between">
+                <div class="flex flex-col items-start gap-4 border-b border-white/10 px-6 py-5 sm:flex-row sm:justify-between">
             <div class="text-left" style="text-align: left;">
-                <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Outbound</h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400">Transfering of stocks to a branch.</p>
+                <h2 class="text-xl font-semibold text-white">Outbound</h2>
+                <p class="text-sm text-white/80">Transfering of stocks to a branch.</p>
             </div>
-            <a href="{{ route('outbound.create') }}" class="self-start rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700 dark:border-slate-700 dark:text-slate-200 dark:hover:border-rose-500/40 dark:hover:bg-rose-500/10 dark:hover:text-rose-200">New Outbound</a>
+            <a href="{{ route('outbound.create') }}" class="table-action">New Outbound</a>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm" style="text-align: left;">
-                <thead class="bg-slate-50 text-left text-xs uppercase tracking-[0.2em] text-slate-800 dark:bg-slate-800/70 dark:text-slate-400">
+                <thead class="bg-slate-900/50 text-left text-xs uppercase tracking-[0.2em] text-white/80">
                     <tr>
                         <th class="px-6 py-4 font-semibold">Transaction</th>
                         <th class="px-6 py-4 font-semibold">Date</th>
@@ -260,41 +304,41 @@
                         <th class="px-6 py-4 text-right font-semibold">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody class="divide-y divide-white/10">
                     @forelse($outbounds as $outbound)
-                        <tr class="transition hover:bg-slate-50/80 dark:hover:bg-slate-800/60">
-                            <td class="px-6 py-5 font-mono text-xs font-semibold text-slate-600 dark:text-slate-300">#{{ str_pad($outbound->out_transactionID, 5, '0', STR_PAD_LEFT) }}</td>
-                            <td class="px-6 py-5 text-slate-500 dark:text-slate-400">{{ $outbound->transaction_date?->format('M d, Y') }}</td>
-                            <td class="px-6 py-5 text-slate-900 dark:text-white">{{ $outbound->destination }}</td>
-                            <td class="px-6 py-5 text-slate-900 dark:text-white">{{ $outbound->user->name ?? '—' }}</td>
-                            <td class="px-6 py-5 text-center text-slate-500 dark:text-slate-400">{{ $outbound->outboundLineItems->count() }}</td>
+                        <tr class="transition hover:bg-white/5">
+                            <td class="px-6 py-5 font-mono text-xs font-semibold text-white/80">#{{ str_pad($outbound->out_transactionID, 5, '0', STR_PAD_LEFT) }}</td>
+                            <td class="px-6 py-5 text-white/80">{{ $outbound->transaction_date?->format('M d, Y') }}</td>
+                            <td class="px-6 py-5 text-white">{{ $outbound->destination }}</td>
+                            <td class="px-6 py-5 text-white">{{ $outbound->user->name ?? '—' }}</td>
+                            <td class="px-6 py-5 text-center text-white/80">{{ $outbound->outboundLineItems->count() }}</td>
                             <td class="px-6 py-5 text-center">
                                 <span class="rounded-lg px-3 py-1 text-xs font-semibold {{ $outbound->status === 'Transferred' ? 'bg-emerald-500/15 text-emerald-200' : ($outbound->status === 'Approved' ? 'bg-blue-500/15 text-blue-200' : 'bg-amber-500/15 text-amber-200') }}">
                                     {{ $outbound->status ?? 'Pending' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-5 text-right font-semibold text-slate-900 dark:text-white">₱{{ number_format($outbound->total_amount ?? 0, 2) }}</td>
+                            <td class="px-6 py-5 text-right font-semibold text-white">₱{{ number_format($outbound->total_amount ?? 0, 2) }}</td>
                             <td class="px-6 py-5 text-right">
-                                <div class="flex items-center justify-end gap-3">
+                                <div class="flex items-center justify-end gap-2">
                                     @if(($outbound->status ?? 'Pending') === 'Pending')
-                                        <form action="{{ route('outbound.approve', $outbound) }}" method="POST">
+                                        <form action="{{ route('outbound.approve', $outbound) }}" method="POST" class="inline">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="font-medium text-blue-300 hover:text-blue-200">Approve</button>
+                                            <button type="submit" class="table-action action-success">Approve</button>
                                         </form>
                                     @endif
                                     @if(($outbound->status ?? 'Pending') === 'Approved')
-                                        <form action="{{ route('outbound.deliver', $outbound) }}" method="POST">
+                                        <form action="{{ route('outbound.deliver', $outbound) }}" method="POST" class="inline">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="font-medium text-emerald-300 hover:text-emerald-200">Transfer</button>
+                                            <button type="submit" class="table-action action-success">Transfer</button>
                                         </form>
                                     @endif
                                 </div>
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="8" class="px-6 py-10 text-center text-sm text-slate-500 dark:text-slate-400">No outbound transactions yet.</td></tr>
+                        <tr><td colspan="8" class="px-6 py-10 text-center text-sm text-white/80">No outbound transactions yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>

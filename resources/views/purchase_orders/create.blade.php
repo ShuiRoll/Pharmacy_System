@@ -6,7 +6,7 @@
 <div class="max-w-4xl mx-auto">
     <div class="mb-8">
         <h1 class="text-3xl font-bold">New Purchase Order</h1>
-        <p class="text-gray-600 dark:text-gray-400">Create order for supplier</p>
+        <p class="text-white/80">Create order for supplier</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm p-10">
@@ -46,7 +46,7 @@
                 <div class="mb-4 flex items-center justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold">Order Items</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Medicines requested from this supplier</p>
+                        <p class="text-sm text-white/80">Medicines requested from this supplier</p>
                     </div>
                     <button type="button" onclick="addPoLine()" class="rounded-full border border-blue-500/50 px-4 py-2 text-sm font-medium text-blue-200">
                         Add Item

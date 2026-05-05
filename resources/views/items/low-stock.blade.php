@@ -6,7 +6,7 @@
 <div class="flex justify-between items-center mb-8">
     <div>
         <h1 class="text-3xl font-bold">Low Stock Items</h1>
-        <p class="text-gray-600 dark:text-gray-400">Items that are at or below their reorder point</p>
+        <p class="text-white/80">Items that are at or below their reorder point</p>
     </div>
     <a href="{{ route('items.index') }}" class="px-5 py-3 rounded-2xl border border-gray-300 dark:border-gray-600 text-sm font-medium">
         Back to Inventory
@@ -48,7 +48,7 @@
                 <td colspan="6" class="p-12 text-center">
                     <div class="mx-auto max-w-md rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-6 py-8">
                         <p class="text-lg font-semibold text-white">No low stock items right now.</p>
-                        <p class="mt-2 text-sm text-slate-300">All tracked medicines are currently above their reorder point.</p>
+                        <p class="mt-2 text-sm text-white/80">All tracked medicines are currently above their reorder point.</p>
                     </div>
                 </td>
             </tr>

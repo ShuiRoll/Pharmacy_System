@@ -6,7 +6,7 @@
 <div class="mx-auto max-w-5xl">
     <div class="mb-8">
         <h1 class="text-3xl font-bold">New Cycle Count</h1>
-        <p class="text-gray-600 dark:text-gray-400">Plan the batches to count. Quantity changes are entered when the count is completed.</p>
+        <p class="text-white/80">Plan the batches to count. Quantity changes are entered when the count is completed.</p>
     </div>
 
     <div class="rounded-3xl bg-white p-10 shadow-sm dark:bg-gray-800">
@@ -22,7 +22,7 @@
 
                 <div>
                     <label class="mb-2 block text-sm font-medium">Status</label>
-                    <div class="w-full rounded-2xl bg-gray-100 px-6 py-4 text-gray-600 dark:bg-gray-700 dark:text-gray-300">Incomplete</div>
+                    <div class="w-full rounded-2xl bg-white px-6 py-4 text-white/80">Incomplete</div>
                 </div>
             </div>
 
@@ -30,7 +30,7 @@
                 <div class="mb-4 flex items-center justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold">Cycle Count Lines</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Expected quantity comes from the selected batch. Quantity change starts at 0 and is locked until completion.</p>
+                        <p class="text-sm text-white/80">Expected quantity comes from the selected batch. Quantity change starts at 0 and is locked until completion.</p>
                     </div>
                     <button type="button" onclick="addCountLine()" class="rounded-full border border-blue-500/50 px-4 py-2 text-sm font-medium text-blue-200">
                         Add Item
@@ -92,7 +92,7 @@ function addCountLine(line = {}) {
         </div>
         <div class="col-span-6 md:col-span-2">
             <label class="mb-1 block text-xs font-medium">Quantity Change</label>
-            <input type="number" value="0" readonly class="w-full rounded-2xl bg-white px-4 py-3 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+            <input type="number" value="0" readonly class="w-full rounded-2xl bg-white px-4 py-3 text-white/80">
         </div>
         <div class="col-span-6 md:col-span-2">
             <label class="mb-1 block text-xs font-medium">Actual</label>

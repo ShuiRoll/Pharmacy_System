@@ -6,7 +6,7 @@
 <div class="max-w-3xl mx-auto">
     <div class="mb-8">
         <h1 class="text-3xl font-bold">Edit Outbound Transaction</h1>
-        <p class="text-gray-600 dark:text-gray-400">Transaction #{{ str_pad($outbound->out_transactionID, 5, '0', STR_PAD_LEFT) }}</p>
+        <p class="text-white/80">Transaction #{{ str_pad($outbound->out_transactionID, 5, '0', STR_PAD_LEFT) }}</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm p-10">

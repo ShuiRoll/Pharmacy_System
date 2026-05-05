@@ -8,7 +8,7 @@
 <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
     <div>
         <h1 class="text-3xl font-bold">Cycle Count #{{ str_pad($cycleCount->countID, 5, '0', STR_PAD_LEFT) }}</h1>
-        <p class="text-gray-600 dark:text-gray-400">Planned products and completed adjustment details</p>
+        <p class="text-white/80">Planned products and completed adjustment details</p>
     </div>
     <div class="flex flex-wrap gap-3">
         @unless($isCompleted)
@@ -24,15 +24,15 @@
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
     <div class="rounded-3xl bg-white p-6 shadow-sm dark:bg-gray-800">
-        <p class="text-sm text-gray-500">Count Date</p>
+        <p class="text-sm text-white/80">Count Date</p>
         <p class="mt-2 text-2xl font-semibold">{{ $cycleCount->count_date->format('M d, Y') }}</p>
     </div>
     <div class="rounded-3xl bg-white p-6 shadow-sm dark:bg-gray-800">
-        <p class="text-sm text-gray-500">Performed By</p>
+        <p class="text-sm text-white/80">Performed By</p>
         <p class="mt-2 text-2xl font-semibold">{{ $cycleCount->user->name ?? '-' }}</p>
     </div>
     <div class="rounded-3xl bg-white p-6 shadow-sm dark:bg-gray-800">
-        <p class="text-sm text-gray-500">Status</p>
+        <p class="text-sm text-white/80">Status</p>
         <span class="mt-3 inline-flex rounded-full px-4 py-1 text-xs font-semibold {{ $isCompleted ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
             {{ $isCompleted ? 'Completed' : 'Incomplete' }}
         </span>
@@ -61,7 +61,7 @@
                     <td class="p-6">{{ $line->batch->location->name ?? '-' }}</td>
                     <td class="p-6 text-right">{{ $line->expected_quantity }}</td>
                     <td class="p-6 text-right">
-                        <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $change > 0 ? 'bg-emerald-100 text-emerald-700' : ($change < 0 ? 'bg-rose-100 text-rose-700' : 'bg-gray-100 text-gray-600') }}">
+                        <span class="status-pill {{ $change > 0 ? 'status-success' : ($change < 0 ? 'status-danger' : '') }}">
                             {{ $change > 0 ? '+' : '' }}{{ $change }}
                         </span>
                     </td>
@@ -70,7 +70,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="p-10 text-center text-sm text-gray-500 dark:text-gray-400">No planned products for this cycle count.</td>
+                    <td colspan="7" class="p-10 text-center text-sm text-white/80">No planned products for this cycle count.</td>
                 </tr>
             @endforelse
         </tbody>

@@ -10,6 +10,27 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+/* Global override: make regular UI text white unless explicitly a status or action control */
+@layer utilities {
+    /* Default text to white for app shell elements */
+    .app-shell-text, body {
+        color: #ffffff;
+    }
+
+    /* Force most text elements to white so inline slate classes are overridden visually */
+    body *:not(.status-pill):not(.table-action):not([data-ignore-global-white]) {
+        color: #ffffff !important;
+    }
+
+    /* Ensure status pills keep their intended colors (override the global whiteness) */
+    .status-pill.status-success { color: #a7f3d0 !important; }
+    .status-pill.status-warning { color: #fcd34d !important; }
+    .status-pill.status-danger { color: #fda4af !important; }
+
+    /* Ensure table-action buttons keep their composed styles */
+    .table-action { color: inherit !important; }
+}
+
 @layer base {
     select option {
         background-color: #0f172a;
@@ -86,6 +107,56 @@
     }
 
     .table-head {
-        @apply bg-slate-900/80 text-left text-xs uppercase tracking-[0.16em] text-slate-300;
+        @apply bg-slate-900/80 text-left text-xs uppercase tracking-[0.16em] text-white/80;
+    }
+
+    p.mt-2.text-3xl.font-semibold,
+    p.text-3xl.font-semibold.mt-2 {
+        text-align: right;
+    }
+
+    /* Status badges: colored text only (no background, no border) - just colored point indicator */
+    .status-pill {
+        @apply inline font-semibold text-sm;
+        background-color: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    .status-pill.status-success {
+        @apply text-emerald-400;
+    }
+
+    .status-pill.status-warning {
+        @apply text-amber-400;
+    }
+
+    .status-pill.status-danger {
+        @apply text-rose-400;
+    }
+
+    /* Action controls in tables: use bordered button style like purchasing actions */
+    .table-action {
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition disabled:pointer-events-none disabled:opacity-50;
+        @apply border-blue-500/50 bg-blue-600 text-white hover:bg-blue-500;
+    }
+
+    .table-action.action-success {
+        @apply border-emerald-400/30 bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/30;
+    }
+
+    .table-action.action-warning {
+        @apply border-amber-400/30 bg-amber-500/20 text-amber-200 hover:bg-amber-500/30;
+    }
+
+    .table-action.action-danger {
+        @apply border-rose-400/30 bg-rose-500/20 text-rose-200 hover:bg-rose-500/30;
+    }
+
+    /* Metrics inside cards should be right-aligned */
+    .app-card .metric-right,
+    .app-panel .metric-right,
+    .metric-right {
+        text-align: right;
     }
 }

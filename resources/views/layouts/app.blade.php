@@ -19,13 +19,42 @@
         @endphp
         <nav class="sticky top-0 z-40 w-full border-b border-white/10 bg-slate-950/75 backdrop-blur-xl">
             <div class="w-full px-4 sm:px-6 lg:px-8">
-                <div class="grid gap-4 py-4 xl:grid-cols-[minmax(260px,1fr)_auto_minmax(260px,1fr)] xl:items-center">
+                <div class="flex items-center justify-between py-4 xl:hidden">
+                    <div class="flex min-w-0 items-center gap-3">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 text-base font-bold text-white shadow-lg shadow-blue-500/20">
+                            CS
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/60">ClearStock</p>
+                            <h1 class="truncate text-base font-semibold text-white">Pharmacy Inventory Management</h1>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        @if($user->role === 'admin')
+                            <a href="{{ route('system-alerts.index') }}"
+                               title="System alerts"
+                               class="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border transition {{ request()->routeIs('system-alerts.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/15 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">
+                                <i class="fas fa-bell"></i>
+                                @if($activeAlertCount > 0)
+                                    <span class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white ring-2 ring-slate-950">
+                                        {{ $activeAlertCount > 9 ? '9+' : $activeAlertCount }}
+                                    </span>
+                                @endif
+                            </a>
+                        @endif
+                        <button onclick="toggleMobileMenu()" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-white/80 transition hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white">
+                            <i class="fas fa-bars text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hidden xl:grid gap-4 py-4 xl:grid-cols-[minmax(260px,1fr)_auto_minmax(260px,1fr)] xl:items-center">
                     <div class="flex min-w-0 items-center gap-3 xl:justify-self-start">
                         <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 text-base font-bold text-white shadow-lg shadow-blue-500/20">
                             CS
                         </div>
                         <div class="min-w-0">
-                            <p class="text-[11px] font-semibold uppercase tracking-[0.35em] text-slate-400">ClearStock</p>
+                            <p class="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/60">ClearStock</p>
                             <h1 class="truncate text-base font-semibold text-white">Pharmacy Inventory Management</h1>
                         </div>
                         <span class="hidden shrink-0 rounded-lg border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-200 2xl:inline-flex">
@@ -35,16 +64,16 @@
 
                     <div class="flex flex-wrap items-center justify-center gap-2 text-sm font-medium xl:justify-self-center">
                         @if($user->role === 'admin')
-                            <a href="{{ route('dashboard') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('dashboard') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Dashboard</a>
-                            <a href="{{ route('items.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('items.index', 'items.create', 'items.edit', 'items.destroy', 'items.show', 'locations.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Items</a>
-                            <a href="{{ route('inventory-adjustments.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('inventory-adjustments.*', 'cycle-counts.*', 'items.low-stock', 'items.near-expiry', 'system-alerts.*', 'outbound.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Inventory</a>
-                            <a href="{{ route('suppliers.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('suppliers.*', 'purchase-orders.*', 'inbound.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Suppliers</a>
-                            <a href="{{ route('users.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('users.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Users</a>
-                            <a href="{{ route('archives.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('archives.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Archives</a>
+                            <a href="{{ route('dashboard') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('dashboard') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Dashboard</a>
+                            <a href="{{ route('items.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('items.index', 'items.create', 'items.edit', 'items.destroy', 'items.show', 'locations.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Items</a>
+                            <a href="{{ route('inventory-adjustments.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('inventory-adjustments.*', 'cycle-counts.*', 'items.low-stock', 'items.near-expiry', 'system-alerts.*', 'outbound.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Inventory</a>
+                            <a href="{{ route('suppliers.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('suppliers.*', 'purchase-orders.*', 'inbound.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Suppliers</a>
+                            <a href="{{ route('users.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('users.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Users</a>
+                            <a href="{{ route('archives.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('archives.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Archives</a>
                         @else
-                            <a href="{{ route('sales.create') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('sales.create') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">POS</a>
-                            <a href="{{ route('sales.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('sales.index') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Sales</a>
-                            <a href="{{ route('sale-returns.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('sale-returns.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Returns</a>
+                            <a href="{{ route('sales.create') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('sales.create') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">POS</a>
+                            <a href="{{ route('sales.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('sales.index') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Sales</a>
+                            <a href="{{ route('sale-returns.index') }}" class="rounded-lg border px-4 py-2 transition {{ request()->routeIs('sale-returns.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/10 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">Returns</a>
                         @endif
                     </div>
 
@@ -52,7 +81,7 @@
                         @if($user->role === 'admin')
                             <a href="{{ route('system-alerts.index') }}"
                                title="System alerts"
-                               class="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border transition {{ request()->routeIs('system-alerts.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/15 bg-white/5 text-slate-200 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">
+                               class="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border transition {{ request()->routeIs('system-alerts.*') ? 'border-blue-500/50 bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'border-white/15 bg-white/5 text-white/80 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white' }}">
                                 <i class="fas fa-bell"></i>
                                 @if($activeAlertCount > 0)
                                     <span class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white ring-2 ring-slate-950">
@@ -68,16 +97,51 @@
                             </div>
                             <div class="hidden min-w-0 leading-tight sm:block">
                                 <p class="truncate text-sm font-semibold text-white">{{ $user->name }}</p>
-                                <p class="text-xs uppercase tracking-[0.25em] text-slate-400">{{ $user->role }}</p>
+                                <p class="text-xs uppercase tracking-[0.25em] text-white/60">{{ $user->role }}</p>
                             </div>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-200">
+                                <button type="submit" class="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-200">
                                     Logout
                                 </button>
                             </form>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div id="mobile-menu" class="hidden max-h-0 overflow-hidden border-t border-white/10 transition-all duration-300 xl:hidden">
+                <div class="space-y-1 px-4 py-3 sm:px-6">
+                    @if($user->role === 'admin')
+                        <a href="{{ route('dashboard') }}" class="block rounded-lg px-4 py-2 text-sm font-medium transition {{ request()->routeIs('dashboard') ? 'border-l-4 border-blue-500 bg-blue-500/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white' }}">
+                            <i class="fas fa-chart-line mr-2"></i> Dashboard
+                        </a>
+                        <a href="{{ route('items.index') }}" class="block rounded-lg px-4 py-2 text-sm font-medium transition {{ request()->routeIs('items.index', 'items.create', 'items.edit', 'locations.*') ? 'border-l-4 border-blue-500 bg-blue-500/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white' }}">
+                            <i class="fas fa-pills mr-2"></i> Items
+                        </a>
+                        <a href="{{ route('inventory-adjustments.index') }}" class="block rounded-lg px-4 py-2 text-sm font-medium transition {{ request()->routeIs('inventory-adjustments.*', 'cycle-counts.*', 'items.low-stock', 'items.near-expiry', 'system-alerts.*', 'outbound.*') ? 'border-l-4 border-blue-500 bg-blue-500/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white' }}">
+                            <i class="fas fa-boxes mr-2"></i> Inventory
+                        </a>
+                        <a href="{{ route('suppliers.index') }}" class="block rounded-lg px-4 py-2 text-sm font-medium transition {{ request()->routeIs('suppliers.*', 'purchase-orders.*', 'inbound.*') ? 'border-l-4 border-blue-500 bg-blue-500/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white' }}">
+                            <i class="fas fa-truck mr-2"></i> Suppliers
+                        </a>
+                        <a href="{{ route('users.index') }}" class="block rounded-lg px-4 py-2 text-sm font-medium transition {{ request()->routeIs('users.*') ? 'border-l-4 border-blue-500 bg-blue-500/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white' }}">
+                            <i class="fas fa-users mr-2"></i> Users
+                        </a>
+                        <a href="{{ route('archives.index') }}" class="block rounded-lg px-4 py-2 text-sm font-medium transition {{ request()->routeIs('archives.*') ? 'border-l-4 border-blue-500 bg-blue-500/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white' }}">
+                            <i class="fas fa-trash mr-2"></i> Archives
+                        </a>
+                    @else
+                        <a href="{{ route('sales.create') }}" class="block rounded-lg px-4 py-2 text-sm font-medium transition {{ request()->routeIs('sales.create') ? 'border-l-4 border-blue-500 bg-blue-500/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white' }}">
+                            <i class="fas fa-cash-register mr-2"></i> POS
+                        </a>
+                        <a href="{{ route('sales.index') }}" class="block rounded-lg px-4 py-2 text-sm font-medium transition {{ request()->routeIs('sales.index') ? 'border-l-4 border-blue-500 bg-blue-500/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white' }}">
+                            <i class="fas fa-shopping-cart mr-2"></i> Sales
+                        </a>
+                        <a href="{{ route('sale-returns.index') }}" class="block rounded-lg px-4 py-2 text-sm font-medium transition {{ request()->routeIs('sale-returns.*') ? 'border-l-4 border-blue-500 bg-blue-500/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white' }}">
+                            <i class="fas fa-undo mr-2"></i> Returns
+                        </a>
+                    @endif
                 </div>
             </div>
         </nav>

@@ -6,7 +6,7 @@
 <div class="mb-8 flex items-center justify-between">
     <div>
         <h1 class="text-3xl font-bold">Sale Returns</h1>
-        <p class="text-gray-600 dark:text-gray-400">Track refunded or exchanged POS transactions</p>
+        <p class="text-white/80">Track refunded or exchanged POS transactions</p>
     </div>
     <a href="{{ route('sale-returns.create') }}"
        class="flex items-center gap-2 rounded-2xl bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700">
@@ -30,13 +30,13 @@
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td class="p-6 font-mono">#{{ str_pad($return->returnID, 5, '0', STR_PAD_LEFT) }}</td>
                     <td class="p-6">#{{ str_pad($return->saleID, 5, '0', STR_PAD_LEFT) }}</td>
-                    <td class="p-6 text-gray-500">{{ $return->return_date->format('M d, Y') }}</td>
+                    <td class="p-6 text-white/80">{{ $return->return_date->format('M d, Y') }}</td>
                     <td class="p-6">{{ $return->user->name ?? '-' }}</td>
                     <td class="p-6">{{ $return->reason ?? '-' }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="p-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                    <td colspan="5" class="p-10 text-center text-sm text-white/80">
                         No returns recorded yet.
                     </td>
                 </tr>
@@ -44,4 +44,10 @@
         </tbody>
     </table>
 </div>
+
+@if($returns instanceof \Illuminate\Pagination\LengthAwarePaginator || $returns instanceof \Illuminate\Pagination\Paginator)
+    <div class="mt-5 flex justify-end">
+        {{ $returns->links() }}
+    </div>
+@endif
 @endsection

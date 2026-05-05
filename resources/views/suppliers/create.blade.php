@@ -6,7 +6,7 @@
 <div class="max-w-2xl mx-auto">
     <div class="mb-8">
         <h1 class="text-3xl font-bold">Add New Supplier</h1>
-        <p class="text-gray-600 dark:text-gray-400">Register a new supplier for purchasing</p>
+        <p class="text-white/80">Register a new supplier for purchasing</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm p-10">

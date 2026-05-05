@@ -17,12 +17,12 @@
     <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-xl shadow-black/20 backdrop-blur">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
-                <div class="mb-4 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-300">
+                <div class="mb-4 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-white/80">
                     <span class="rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-blue-200">Item Details</span>
-                    <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-300">{{ $item->item_code }}</span>
+                    <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">{{ $item->item_code }}</span>
                 </div>
                 <h1 class="text-4xl font-semibold tracking-tight text-white">{{ $item->name }}</h1>
-                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
+                <p class="mt-3 max-w-2xl text-sm leading-6 text-white/80">
                     {{ $item->description ?: 'Batch-level stock and expiry details for this item.' }}
                 </p>
             </div>
@@ -33,35 +33,35 @@
             </div>
         </div>
 
-        <div class="mt-8 grid gap-4 md:grid-cols-4">
+                <div class="mt-8 grid gap-4 md:grid-cols-4">
             <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <p class="text-sm text-slate-300">Total Stock</p>
+                <p class="text-sm text-white/80">Total Stock</p>
                 <p class="mt-2 text-3xl font-semibold text-white">{{ $totalStock }}</p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <p class="text-sm text-slate-300">Active Batches</p>
+                <p class="text-sm text-white/80">Active Batches</p>
                 <p class="mt-2 text-3xl font-semibold text-white">{{ $activeBatches }}</p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <p class="text-sm text-slate-300">Default Location</p>
+                <p class="text-sm text-white/80">Default Location</p>
                 <p class="mt-2 text-lg font-semibold text-white">{{ $item->location->name ?? 'Not set' }}</p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <p class="text-sm text-slate-300">Current SRP</p>
+                <p class="text-sm text-white/80">Current SRP</p>
                 <p class="mt-2 text-lg font-semibold text-white">PHP {{ number_format($item->price, 2) }}</p>
             </div>
         </div>
     </section>
 
     <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-xl shadow-black/20 backdrop-blur">
-        <div class="border-b border-white/10 px-6 py-5">
+            <div class="border-b border-white/10 px-6 py-5">
             <h2 class="text-xl font-semibold text-white">Batches by Expiry Date</h2>
-            <p class="mt-1 text-sm text-slate-300">Earliest expiry appears first so stock can be reviewed using FEFO.</p>
+            <p class="mt-1 text-sm text-white/80">Earliest expiry appears first so stock can be reviewed using FEFO.</p>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-                <thead class="bg-slate-800/70 text-xs uppercase tracking-[0.2em] text-slate-400">
+                <thead class="bg-slate-800/70 text-xs uppercase tracking-[0.2em] text-white/60">
                     <tr>
                         <th class="px-6 py-4 font-semibold">Batch</th>
                         <th class="px-6 py-4 font-semibold">Expiry Date</th>
@@ -81,15 +81,15 @@
                         @endphp
                         <tr class="transition hover:bg-slate-800/60">
                             <td class="px-6 py-5 font-mono text-xs font-semibold text-white">{{ $batch->lot_number ?? 'Batch '.$batch->batchID }}</td>
-                            <td class="px-6 py-5 text-slate-300">{{ $batch->expiration_date?->format('M d, Y') ?? 'No expiry' }}</td>
-                            <td class="px-6 py-5 text-slate-300">{{ $batch->location->name ?? 'Not set' }}</td>
+                            <td class="px-6 py-5 text-white/80">{{ $batch->expiration_date?->format('M d, Y') ?? 'No expiry' }}</td>
+                            <td class="px-6 py-5 text-white/80">{{ $batch->location->name ?? 'Not set' }}</td>
                             <td class="px-6 py-5 text-right font-semibold text-white">{{ $batch->current_quantity }}</td>
-                            <td class="px-6 py-5 text-right text-slate-300">PHP {{ number_format($batch->unit_cost ?? 0, 2) }}</td>
-                            <td class="px-6 py-5 text-right text-slate-300">PHP {{ number_format($item->price, 2) }}</td>
+                            <td class="px-6 py-5 text-right text-white/80">PHP {{ number_format($batch->unit_cost ?? 0, 2) }}</td>
+                            <td class="px-6 py-5 text-right text-white/80">PHP {{ number_format($item->price, 2) }}</td>
                             <td class="px-6 py-5 text-right font-semibold text-white">PHP {{ number_format($batch->current_quantity * $item->price, 2) }}</td>
                             <td class="w-36 px-6 py-5 text-center">
                                 @if($batch->current_quantity <= 0)
-                                    <span class="inline-flex min-w-24 items-center justify-center whitespace-nowrap rounded-full bg-slate-500/15 px-3 py-1 text-xs font-semibold text-slate-300">Empty</span>
+                                    <span class="inline-flex min-w-24 items-center justify-center whitespace-nowrap rounded-full bg-slate-500/15 px-3 py-1 text-xs font-semibold text-white/80">Empty</span>
                                 @elseif($isExpired)
                                     <span class="inline-flex min-w-24 items-center justify-center whitespace-nowrap rounded-full bg-rose-500/15 px-3 py-1 text-xs font-semibold text-rose-200">Expired</span>
                                 @elseif($isNearExpiry)
@@ -101,7 +101,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-10 text-center text-sm text-slate-300">No batches recorded for this item yet.</td>
+                            <td colspan="8" class="px-6 py-10 text-center text-sm text-white/80">No batches recorded for this item yet.</td>
                         </tr>
                     @endforelse
                 </tbody>

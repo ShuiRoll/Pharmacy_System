@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Item;
 use App\Models\Sale;
 use App\Models\SaleLine;
@@ -20,14 +21,14 @@ class SaleController extends Controller
             ? Sale::with(['user', 'saleLines.item'])
                 ->withCount('saleReturns')
                 ->orderByDesc('sold_at')
-                ->get()
+                ->paginate(12)
             : collect();
         return view('sales.index', compact('sales'));
     }
 
     public function create()
     {
-        $items = [];
+        $items = collect();
         if (Schema::hasTable('items') && Schema::hasTable('inventory_batches')) {
             $items = Item::with(['inventoryBatches' => function($q) {
                 $q->where('current_quantity', '>', 0)
@@ -38,7 +39,7 @@ class SaleController extends Controller
                   ->orderByRaw('expiration_date IS NULL')
                   ->orderBy('expiration_date')
                   ->orderBy('batchID');
-            }])->get();
+            }])->paginate(8);
         }
 
         return view('sales.create', [
@@ -148,24 +149,65 @@ class SaleController extends Controller
 
     public function dailyReport()
     {
-        $sales = Sale::whereDate('created_at', today())
-            ->with(['user', 'saleLines'])
-            ->withCount('saleReturns')
-            ->get();
-        $total = $sales->reject(fn (Sale $sale) => $sale->sale_returns_count > 0)->sum('total');
+        [$sales, $total] = $this->salesReportData(today()->startOfDay(), today()->endOfDay(), true, 'daily_page');
 
         return view('sales.reports.daily', compact('sales', 'total'));
     }
 
     public function monthlyReport()
     {
-        $sales = Sale::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->with(['user', 'saleLines'])
-            ->withCount('saleReturns')
-            ->get();
-        $total = $sales->reject(fn (Sale $sale) => $sale->sale_returns_count > 0)->sum('total');
+        [$sales, $total] = $this->salesReportData(now()->startOfMonth(), now()->endOfMonth(), true, 'monthly_page');
 
         return view('sales.reports.monthly', compact('sales', 'total'));
+    }
+
+    public function dailyReportPdf()
+    {
+        [$sales, $total] = $this->salesReportData(today()->startOfDay(), today()->endOfDay());
+
+        $filename = 'daily-sales-report-' . today()->format('Y-m-d') . '.pdf';
+
+        return Pdf::loadView('sales.reports.pdf', [
+            'reportTitle' => 'Daily Sales Report',
+            'reportSubtitle' => 'Sales completed today',
+            'periodLabel' => today()->format('M d, Y'),
+            'sales' => $sales,
+            'total' => $total,
+        ])->download($filename);
+    }
+
+    public function monthlyReportPdf()
+    {
+        [$sales, $total] = $this->salesReportData(now()->startOfMonth(), now()->endOfMonth());
+
+        $filename = 'monthly-sales-report-' . now()->format('Y-m') . '.pdf';
+
+        return Pdf::loadView('sales.reports.pdf', [
+            'reportTitle' => 'Monthly Sales Report',
+            'reportSubtitle' => 'Sales completed this month',
+            'periodLabel' => now()->format('F Y'),
+            'sales' => $sales,
+            'total' => $total,
+        ])->download($filename);
+    }
+
+    private function salesReportData($startDate, $endDate, bool $paginate = false, string $pageName = 'page'): array
+    {
+        $baseQuery = Sale::whereBetween('created_at', [$startDate, $endDate]);
+
+        $salesQuery = (clone $baseQuery)
+            ->with(['user', 'saleLines'])
+            ->withCount('saleReturns')
+            ->orderByDesc('created_at');
+
+        $sales = $paginate
+            ? $salesQuery->paginate(12, ['*'], $pageName)
+            : $salesQuery->get();
+
+        $total = (clone $baseQuery)
+            ->whereDoesntHave('saleReturns')
+            ->sum('total');
+
+        return [$sales, $total];
     }
 }

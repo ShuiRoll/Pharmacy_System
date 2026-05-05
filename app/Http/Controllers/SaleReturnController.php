@@ -15,7 +15,7 @@ class SaleReturnController extends Controller
     public function index()
     {
         $returns = Schema::hasTable('sale_returns') && Schema::hasTable('sales')
-            ? SaleReturn::with(['sale', 'user'])->orderByDesc('return_date')->get()
+            ? SaleReturn::with(['sale', 'user'])->orderByDesc('return_date')->paginate(12)
             : collect();
         return view('sale-returns.index', compact('returns'));
     }

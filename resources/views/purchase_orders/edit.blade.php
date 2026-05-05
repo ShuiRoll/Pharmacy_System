@@ -6,7 +6,7 @@
 <div class="max-w-3xl mx-auto">
     <div class="mb-8">
         <h1 class="text-3xl font-bold">Edit Purchase Order</h1>
-        <p class="text-gray-600 dark:text-gray-400">PO-{{ str_pad($purchaseOrder->poID, 4, '0', STR_PAD_LEFT) }}</p>
+        <p class="text-white/80">PO-{{ str_pad($purchaseOrder->poID, 4, '0', STR_PAD_LEFT) }}</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm p-10">
@@ -56,7 +56,7 @@
                 <div class="mb-4 flex items-center justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold">Order Items</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Medicines requested from this supplier</p>
+                        <p class="text-sm text-white/80">Medicines requested from this supplier</p>
                     </div>
                     <button type="button" onclick="addPoLine()" class="rounded-full border border-blue-500/50 px-4 py-2 text-sm font-medium text-blue-200">
                         Add Item

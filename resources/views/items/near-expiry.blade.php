@@ -6,7 +6,7 @@
 <div class="flex justify-between items-center mb-8">
     <div>
         <h1 class="text-3xl font-bold">Near Expiry Items</h1>
-        <p class="text-gray-600 dark:text-gray-400">Batches with expiration dates within the next 30 days</p>
+        <p class="text-white/80">Batches with expiration dates within the next 30 days</p>
     </div>
     <a href="{{ route('items.index') }}" class="px-5 py-3 rounded-2xl border border-gray-300 dark:border-gray-600 text-sm font-medium">
         Back to Inventory
@@ -31,7 +31,7 @@
                 <td class="p-6 font-mono">{{ $item->item_code }}</td>
                 <td class="p-6 font-medium">{{ $item->name }}</td>
                 <td class="p-6">{{ $batch?->lot_number ?? '—' }}</td>
-                <td class="p-6 text-center text-sm text-gray-500">{{ $batch?->expiration_date?->format('M d, Y') ?? '—' }}</td>
+                <td class="p-6 text-center text-sm text-white/80">{{ $batch?->expiration_date?->format('M d, Y') ?? '—' }}</td>
                 <td class="p-6 text-center font-semibold">{{ $batch?->current_quantity ?? 0 }}</td>
             </tr>
             @empty
@@ -39,7 +39,7 @@
                 <td colspan="5" class="p-12 text-center">
                     <div class="mx-auto max-w-md rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-6 py-8">
                         <p class="text-lg font-semibold text-white">No near expiry items right now.</p>
-                        <p class="mt-2 text-sm text-slate-300">No active batches are expiring within the next 30 days.</p>
+                        <p class="mt-2 text-sm text-white/80">No active batches are expiring within the next 30 days.</p>
                     </div>
                 </td>
             </tr>

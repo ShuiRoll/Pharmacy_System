@@ -6,7 +6,7 @@
 <div class="max-w-2xl mx-auto">
     <div class="mb-8">
         <h1 class="text-3xl font-bold">New Sale Return</h1>
-        <p class="text-gray-600 dark:text-gray-400">Record a refund or returned POS transaction</p>
+        <p class="text-white/80">Record a refund or returned POS transaction</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm p-10">

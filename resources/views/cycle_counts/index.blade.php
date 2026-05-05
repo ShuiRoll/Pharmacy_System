@@ -6,7 +6,7 @@
 <div class="flex justify-between items-center mb-8">
     <div>
         <h1 class="text-3xl font-bold">Cycle Counts</h1>
-        <p class="text-gray-600 dark:text-gray-400">Physical inventory verification</p>
+        <p class="text-white/80">Physical inventory verification</p>
     </div>
     <a href="{{ route('cycle-counts.create') }}"
        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-medium flex items-center gap-2">
@@ -49,7 +49,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="p-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                    <td colspan="6" class="p-10 text-center text-sm text-white/80">
                         No cycle counts planned yet.
                     </td>
                 </tr>

@@ -7,7 +7,7 @@
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
             <h1 class="text-3xl font-bold text-white">POS</h1>
-            <p class="mt-1 text-sm text-slate-300">Product-first checkout for {{ auth()->user()->name }}.</p>
+            <p class="mt-1 text-sm text-white/80">Product-first checkout for {{ auth()->user()->name }}.</p>
         </div>
         <button type="button" onclick="openCheckout()" class="btn btn-primary relative">
             <i class="fas fa-cart-shopping"></i>
@@ -23,7 +23,7 @@
         </div>
 
         <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" id="product-grid">
-            @foreach($items as $item)
+            @forelse($items as $item)
                 @php
                     $availableStock = $item->inventoryBatches->sum('current_quantity');
                     $earliestBatch = $item->inventoryBatches->first();
@@ -36,19 +36,19 @@
                             <div class="flex items-start justify-between gap-3">
                                 <div>
                                     <h3 class="font-semibold text-white">{{ $item->name }}</h3>
-                                    <p class="mt-1 font-mono text-xs text-slate-400">{{ $item->item_code }}</p>
+                                    <p class="mt-1 font-mono text-xs text-white/80">{{ $item->item_code }}</p>
                                 </div>
                                 <p class="text-lg font-bold text-white">&#8369;{{ number_format($item->price, 2) }}</p>
-                                <p class="text-[11px] uppercase tracking-[0.2em] text-slate-400">SRP</p>
+                                <p class="text-[11px] uppercase tracking-[0.2em] text-white/80">SRP</p>
                             </div>
 
-                            <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-slate-300">
+                            <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-white/80">
                                 <div class="rounded-lg bg-slate-950/50 p-3">
-                                    <p class="text-slate-500">Stock</p>
+                                    <p class="text-white/80">Stock</p>
                                     <p class="mt-1 text-base font-semibold text-white">{{ $availableStock }}</p>
                                 </div>
                                 <div class="rounded-lg bg-slate-950/50 p-3">
-                                    <p class="text-slate-500">Batch</p>
+                                    <p class="text-white/80">Batch</p>
                                     <p class="mt-1 truncate font-semibold text-white">{{ $earliestBatch->lot_number ?? 'N/A' }}</p>
                                 </div>
                             </div>
@@ -63,8 +63,18 @@
                         </div>
                     </article>
                 @endif
-            @endforeach
+            @empty
+                <div class="col-span-full rounded-lg border border-white/10 bg-white/5 p-8 text-center">
+                    <p class="text-white/80">No products available at the moment.</p>
+                </div>
+            @endforelse
         </div>
+
+        @if($items instanceof \Illuminate\Pagination\LengthAwarePaginator && $items->hasPages())
+            <div class="mt-6 flex justify-center">
+                {{ $items->links('pagination::tailwind') }}
+            </div>
+        @endif
     </div>
 </div>
 
@@ -74,7 +84,7 @@
             <div class="flex items-start justify-between gap-4">
                 <div>
                     <h2 class="text-2xl font-semibold text-white">Order Details</h2>
-                    <p class="mt-1 text-sm text-slate-300">Review the cart before completing the sale.</p>
+                    <p class="mt-1 text-sm text-white/80">Review the cart before completing the sale.</p>
                 </div>
                 <button type="button" onclick="closeCheckout()" class="btn btn-secondary" aria-label="Close checkout">
                     <i class="fas fa-xmark"></i>
@@ -86,15 +96,15 @@
             <div class="mt-5 rounded-lg border border-white/10 bg-white/5 p-4">
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-slate-300">Subtotal</span>
+                        <span class="text-sm text-white/80">Subtotal</span>
                         <span id="cart-subtotal" class="font-semibold text-white">&#8369;0.00</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-slate-300">VAT ({{ number_format($taxRate * 100, 0) }}%)</span>
+                        <span class="text-sm text-white/80">VAT ({{ number_format($taxRate * 100, 0) }}%)</span>
                         <span id="cart-tax" class="font-semibold text-white">&#8369;0.00</span>
                     </div>
                     <div class="flex items-center justify-between border-t border-white/10 pt-3">
-                        <span class="text-sm text-slate-300">Total Amount</span>
+                        <span class="text-sm text-white/80">Total Amount</span>
                         <span id="cart-total" class="text-3xl font-bold text-white">&#8369;0.00</span>
                     </div>
                 </div>
@@ -102,7 +112,7 @@
 
             <div class="mt-5 grid gap-4 md:grid-cols-2">
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-slate-200">Payment Method</label>
+                    <label class="mb-2 block text-sm font-medium text-white">Payment Method</label>
                     <select id="payment-method-select" onchange="selectPayment()" class="form-input">
                         <option value="Cash">Cash</option>
                         <option value="GCash">GCash</option>
@@ -125,7 +135,7 @@
                 </div>
 
                 <div id="card-panel" class="hidden">
-                    <label class="mb-2 block text-sm font-medium text-slate-200">Card ID / Approval Code</label>
+                    <label class="mb-2 block text-sm font-medium text-white">Card ID / Approval Code</label>
                     <input id="card-reference" type="text" class="form-input" placeholder="Card reference">
                 </div>
             </div>
@@ -147,6 +157,12 @@
 </div>
 
 <script>
+// Prevent pagination links from being searchable
+const originalFilterProducts = window.filterProducts || function() {};
+window.filterProducts = function() {
+    originalFilterProducts();
+};
+
 let cart = [];
 const TAX_RATE = {{ json_encode($taxRate) }};
 
@@ -182,7 +198,7 @@ function renderCart() {
     let subtotal = 0;
 
     if (!cart.length) {
-        container.innerHTML = '<div class="rounded-lg border border-dashed border-white/20 p-6 text-center text-sm text-slate-300">No products in the cart.</div>';
+        container.innerHTML = '<div class="rounded-lg border border-dashed border-white/20 p-6 text-center text-sm text-white/80">No products in the cart.</div>';
     }
 
     cart.forEach((item, index) => {
@@ -194,7 +210,7 @@ function renderCart() {
         row.innerHTML = `
             <div>
                 <p class="font-semibold text-white">${item.name}</p>
-                <p class="text-xs text-slate-400">${item.quantity} x ${peso(item.price)}</p>
+                <p class="text-xs text-white/80">${item.quantity} x ${peso(item.price)}</p>
             </div>
             <p class="font-semibold text-white">${peso(itemTotal)}</p>
             <button type="button" onclick="removeFromCart(${index})" class="btn btn-danger" aria-label="Remove ${item.name}">

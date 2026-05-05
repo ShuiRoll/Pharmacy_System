@@ -7,7 +7,7 @@
     <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
             <h1 class="text-3xl font-bold">Complete Cycle Count</h1>
-            <p class="text-gray-600 dark:text-gray-400">#{{ str_pad($cycleCount->countID, 5, '0', STR_PAD_LEFT) }} planned on {{ $cycleCount->count_date->format('M d, Y') }}</p>
+            <p class="text-white/80">#{{ str_pad($cycleCount->countID, 5, '0', STR_PAD_LEFT) }} planned on {{ $cycleCount->count_date->format('M d, Y') }}</p>
         </div>
         <a href="{{ route('cycle-counts.show', $cycleCount) }}" class="rounded-2xl border border-gray-300 px-5 py-3 text-sm font-medium dark:border-gray-600">
             View Details
@@ -22,14 +22,14 @@
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
                     <label class="mb-2 block text-sm font-medium">Count Date</label>
-                    <div class="w-full rounded-2xl bg-gray-100 px-6 py-4 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                    <div class="w-full rounded-2xl bg-white px-6 py-4 text-white/80">
                         {{ $cycleCount->count_date->format('M d, Y') }}
                     </div>
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-medium">Status</label>
-                    <div class="w-full rounded-2xl bg-gray-100 px-6 py-4 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                    <div class="w-full rounded-2xl bg-white px-6 py-4 text-white/80">
                         Incomplete
                     </div>
                 </div>
@@ -38,7 +38,7 @@
             <div class="mt-10 border-t border-gray-200 pt-8 dark:border-gray-700">
                 <div class="mb-4">
                     <h2 class="text-xl font-semibold">Planned Count Products</h2>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Enter the quantity change from the expected count. Non-zero changes create inventory adjustments.</p>
+                    <p class="text-sm text-white/80">Enter the quantity change from the expected count. Non-zero changes create inventory adjustments.</p>
                 </div>
 
                 <div id="count-lines" class="space-y-4"></div>
@@ -86,7 +86,7 @@ function addCountLine(line) {
             <label class="mb-1 block text-xs font-medium">Item / Batch</label>
             <div class="min-h-[48px] rounded-2xl bg-white px-4 py-3 text-sm dark:bg-gray-800">
                 <p class="font-semibold">${line.item}</p>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Batch ${line.lot} - Exp ${line.expiry}</p>
+                <p class="mt-1 text-xs text-white/80">Batch ${line.lot} - Exp ${line.expiry}</p>
             </div>
         </div>
         <div class="col-span-6 md:col-span-2">

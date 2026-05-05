@@ -14,6 +14,66 @@ function dismissToast(toast) {
     }, 220);
 }
 
+function inferStatusVariant(text) {
+    const label = (text || '').trim().toLowerCase();
+    if (/(saved|approved|received|passed|transferred|resolved|active|success|approved)/.test(label)) {
+        return 'status-success';
+    }
+
+    if (/(pending|watch|near|low|warning|hold|waiting)/.test(label)) {
+        return 'status-warning';
+    }
+
+    if (/(failed|rejected|error|danger|rejected|cancelled|canceled)/.test(label)) {
+        return 'status-danger';
+    }
+
+    // Default to warning when unknown; keeps to three allowed colors
+    return 'status-warning';
+}
+
+function inferActionVariant(text) {
+    const label = (text || '').trim().toLowerCase();
+
+    if (/(delete|remove|reject|cancel)/.test(label)) {
+        return 'action-danger';
+    }
+
+    if (/(approve|accept|transfer|save|mark resolved|complete)/.test(label)) {
+        return 'action-success';
+    }
+
+    if (/(return|warning)/.test(label)) {
+        return 'action-warning';
+    }
+
+    return '';
+}
+
+function normalizeTableUiStyles() {
+    document.querySelectorAll('td.text-center > span.rounded-full').forEach((badge) => {
+        if (! badge.classList.contains('status-pill')) {
+            badge.classList.add('status-pill');
+        }
+
+        badge.classList.remove('status-success', 'status-warning', 'status-danger');
+        badge.classList.add(inferStatusVariant(badge.textContent));
+    });
+
+    document.querySelectorAll('td.text-right a, td.text-right button, td.text-center a, td.text-center button').forEach((control) => {
+        if (control.closest('.pagination') || control.closest('[data-profile-menu]')) {
+            return;
+        }
+
+        control.classList.add('table-action');
+        control.classList.remove('action-info', 'action-success', 'action-warning', 'action-danger');
+        const variant = inferActionVariant(control.textContent);
+        if (variant) {
+            control.classList.add(variant);
+        }
+    });
+}
+
 document.addEventListener('click', (event) => {
     const toastClose = event.target.closest('[data-toast-close]');
 
@@ -133,6 +193,8 @@ window.addEventListener('load', () => {
 
     document.querySelectorAll('form[data-unique-form]').forEach(validateUniqueForm);
 
+    normalizeTableUiStyles();
+
     document.querySelectorAll('[data-filter-scope]').forEach((scope) => {
         const params = new URLSearchParams(window.location.search);
         const target = params.get('filter') || window.location.hash.replace('#', '');
@@ -143,3 +205,20 @@ window.addEventListener('load', () => {
         }
     });
 });
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    if (!menu) return;
+    
+    const isHidden = menu.classList.contains('hidden');
+    
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('max-h-96');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('max-h-96');
+    }
+}
+
+window.toggleMobileMenu = toggleMobileMenu;

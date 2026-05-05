@@ -71,7 +71,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('sales', SaleController::class)->only(['index', 'create', 'store', 'show']);
         Route::resource('sale-returns', SaleReturnController::class)->only(['index', 'create', 'store']);
         Route::get('/reports/daily', [SaleController::class, 'dailyReport'])->name('reports.daily');
+        Route::get('/reports/daily/pdf', [SaleController::class, 'dailyReportPdf'])->name('reports.daily.pdf');
         Route::get('/reports/monthly', [SaleController::class, 'monthlyReport'])->name('reports.monthly');
+        Route::get('/reports/monthly/pdf', [SaleController::class, 'monthlyReportPdf'])->name('reports.monthly.pdf');
     });
 
 });

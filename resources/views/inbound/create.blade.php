@@ -4,14 +4,14 @@
 
 @section('content')
 <div class="mx-auto max-w-6xl">
-    <div class="mb-8 flex items-center justify-between gap-4">
+            <div class="mb-8 flex items-center justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-bold">Receive Goods</h1>
-            <p class="text-gray-600 dark:text-gray-400">Inbound Transaction - Warehouse / Pharmacy</p>
+            <h1 class="text-3xl font-bold text-white">Receive Goods</h1>
+            <p class="text-white/80">Inbound Transaction - Warehouse / Pharmacy</p>
         </div>
         <div class="text-right">
-            <p class="text-sm text-gray-500">Received By</p>
-            <p class="font-medium">{{ auth()->user()->name }}</p>
+            <p class="text-sm text-white/80">Received By</p>
+            <p class="font-medium text-white">{{ auth()->user()->name }}</p>
         </div>
     </div>
 
@@ -127,7 +127,7 @@ function addLineItem(line = {}) {
 
         <div class="col-span-12 md:col-span-2">
             <label class="mb-1 block text-xs font-medium">Lot Number</label>
-            <div class="rounded-2xl border border-dashed border-gray-300 bg-white px-5 py-4 text-sm text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
+            <div class="rounded-2xl border border-dashed border-white/10 bg-white px-5 py-4 text-sm text-white/80">
                 Auto generated
             </div>
         </div>

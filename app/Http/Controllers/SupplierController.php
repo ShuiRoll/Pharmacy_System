@@ -12,6 +12,10 @@ class SupplierController extends Controller
 {
     public function index()
     {
+        $pendingOrdersCount = Schema::hasTable('purchase_orders')
+            ? PurchaseOrder::where('status', 'Pending')->count()
+            : 0;
+
         $suppliers = Schema::hasTable('suppliers')
             ? Supplier::latest()->get()
             : collect();
@@ -20,14 +24,14 @@ class SupplierController extends Controller
             ? PurchaseOrder::with('supplier')
                 ->where('status', '!=', 'Received')
                 ->orderByDesc('po_date')
-                ->get()
+                ->paginate(8)
             : collect();
 
         $inbounds = Schema::hasTable('inbound_transactions') && Schema::hasTable('inbound_line_items') && Schema::hasTable('items')
             ? InboundTransaction::with(['user', 'purchaseOrder.supplier', 'inboundLineItems.item'])->orderByDesc('date_received')->get()
             : collect();
 
-        return view('suppliers.index', compact('suppliers', 'purchaseOrders', 'inbounds'));
+        return view('suppliers.index', compact('suppliers', 'purchaseOrders', 'inbounds', 'pendingOrdersCount'));
     }
 
     public function create()

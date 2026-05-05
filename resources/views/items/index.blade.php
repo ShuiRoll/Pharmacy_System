@@ -13,10 +13,10 @@
 <div class="space-y-8" data-filter-scope>
     <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-xl shadow-black/20 backdrop-blur">
         <div class="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-white">
-            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-300">Filter</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">Filter</span>
             <button type="button" data-section-filter="all" class="rounded-full border border-blue-500/50 bg-blue-600 px-3 py-1 text-white transition hover:border-blue-400 hover:text-blue-100">All</button>
-            <button type="button" data-section-filter="items" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-300 transition hover:border-blue-400 hover:text-blue-200">Items</button>
-            <button type="button" data-section-filter="locations" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-300 transition hover:border-blue-400 hover:text-blue-200">Locations</button>
+            <button type="button" data-section-filter="items" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80 transition hover:border-blue-400 hover:text-white">Items</button>
+            <button type="button" data-section-filter="locations" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80 transition hover:border-blue-400 hover:text-white">Locations</button>
         </div>
         <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
@@ -50,25 +50,25 @@
         <div data-filter-section="items" class="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-xl shadow-black/20 backdrop-blur">
             <div class="flex flex-col gap-4 border-b border-slate-200 px-6 py-5 dark:border-slate-800 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                    <h2 class="text-xl font-semibold text-slate-800 dark:text-white">Items</h2>
-                    <p class="text-sm text-slate-700 dark:text-white">Stock, batches, and expiry status</p>
+                    <h2 class="text-xl font-semibold text-white">Items</h2>
+                    <p class="text-sm text-white/80">Stock, batches, and expiry status</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('items.low-stock') }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-800 dark:text-white transition hover:border-amber-200 hover:text-amber-700 dark:border-slate-700 dark:hover:border-amber-500/40 dark:hover:text-amber-200">Low Stock</a>
-                    <a href="{{ route('items.near-expiry') }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-800 dark:text-white transition hover:border-orange-200 hover:text-orange-700 dark:border-slate-700 dark:hover:border-orange-500/40 dark:hover:text-orange-200">Near Expiry</a>
+                    <a href="{{ route('items.low-stock') }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-white transition hover:border-amber-200 hover:text-white">Low Stock</a>
+                    <a href="{{ route('items.near-expiry') }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-white transition hover:border-orange-200 hover:text-white">Near Expiry</a>
                 </div>
             </div>
 
             <div class="border-b border-white/10 px-6 py-4">
                 <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="search" placeholder="Search medicine or SKU..." class="w-full rounded-xl border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white outline-none transition placeholder:text-slate-400 focus:border-blue-400/50 focus:bg-white/10 focus:ring-4 focus:ring-blue-500/10">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white/80"></i>
+                    <input type="text" id="search" placeholder="Search medicine or SKU..." class="w-full rounded-xl border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white outline-none transition placeholder:text-white/60 focus:border-blue-400/50 focus:bg-white/10 focus:ring-4 focus:ring-blue-500/10">
                 </div>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-slate-50 text-left text-xs uppercase tracking-[0.2em] text-slate-800 dark:bg-slate-800/70 dark:text-slate-400">
+                    <thead class="bg-slate-900/50 text-left text-xs uppercase tracking-[0.2em] text-white/80">
                         <tr>
                             <th class="px-6 py-4 font-semibold">SKU</th>
                             <th class="px-6 py-4 font-semibold">Medicine</th>
@@ -87,32 +87,34 @@
                                 $stock = $item->inventoryBatches->sum('current_quantity');
                                 $earliestBatch = $item->inventoryBatches->whereNotNull('expiration_date')->sortBy('expiration_date')->first();
                             @endphp
-                            <tr class="transition hover:bg-slate-50/80 dark:hover:bg-slate-800/60">
-                                <td class="px-6 py-5 font-mono text-xs font-semibold text-slate-800 dark:text-white">{{ $item->item_code }}</td>
-                                <td class="px-6 py-5 font-medium text-slate-800 dark:text-white">{{ $item->name }}</td>
-                                <td class="px-6 py-5 text-slate-700 dark:text-white">{{ $item->category ?? '—' }}</td>
-                                <td class="px-6 py-5 text-slate-700 dark:text-white">{{ $item->location->name ?? '—' }}</td>
-                                <td class="px-6 py-5 text-center font-semibold text-slate-800 dark:text-white">{{ $stock }}</td>
-                                <td class="px-6 py-5 text-center text-slate-700 dark:text-white">{{ $item->minimum_stock_lvl }}</td>
+                            <tr class="transition hover:bg-white/5">
+                                <td class="px-6 py-5 font-mono text-xs font-semibold text-white">{{ $item->item_code }}</td>
+                                    <td class="px-6 py-5 font-medium text-white">{{ $item->name }}</td>
+                                <td class="px-6 py-5 text-white/80">{{ $item->category ?? '—' }}</td>
+                                <td class="px-6 py-5 text-white/80">{{ $item->location->name ?? '—' }}</td>
+                                <td class="px-6 py-5 text-center font-semibold text-white">{{ $stock }}</td>
+                                <td class="px-6 py-5 text-center text-white/80">{{ $item->minimum_stock_lvl }}</td>
                                 <td class="px-6 py-5 text-center">
                                     @if($stock == 0)
-                                        <span class="rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-500/15 dark:text-rose-200">No Stock</span>
+                                        <span class="status-pill status-danger">No Stock</span>
                                     @elseif($stock < $item->minimum_stock_lvl)
-                                        <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-500/15 dark:text-amber-200">Low</span>
+                                        <span class="status-pill status-warning">Low</span>
                                     @else
-                                        <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200">Good</span>
+                                        <span class="status-pill status-success">Good</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-5 text-center text-slate-500 dark:text-slate-400">{{ $earliestBatch?->expiration_date?->format('M Y') ?? '—' }}</td>
+                                <td class="px-6 py-5 text-center text-white/80">{{ $earliestBatch?->expiration_date?->format('M Y') ?? '—' }}</td>
                                 <td class="px-6 py-5 text-right">
-                                    <div class="flex items-center justify-end gap-3">
-                                        <a href="{{ route('items.show', $item) }}" class="font-medium text-cyan-600 transition hover:text-cyan-700 dark:text-cyan-300 dark:hover:text-cyan-200">Details</a>
-                                        <a href="{{ route('items.edit', $item) }}" class="font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-200">Edit</a>
-                                        <form action="{{ route('items.destroy', $item) }}" method="POST" onsubmit="return confirm('Delete this item?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="font-medium text-rose-600 transition hover:text-rose-700 dark:text-rose-300 dark:hover:text-rose-200">Delete</button>
-                                        </form>
+                                    <div class="relative inline-block group">
+                                        <a href="{{ route('items.show', $item) }}" class="table-action">Details</a>
+                                        <div class="absolute right-0 top-full mt-1 w-28 bg-slate-800 border border-white/10 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                                            <a href="{{ route('items.edit', $item) }}" class="block px-3 py-2 text-xs font-medium text-white hover:bg-white/5 first:rounded-t-lg">Edit</a>
+                                            <form action="{{ route('items.destroy', $item) }}" method="POST" onsubmit="return confirm('Delete this item?');" class="block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="w-full text-left px-3 py-2 text-xs font-medium text-rose-200 hover:bg-white/5 last:rounded-b-lg">Delete</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -127,7 +129,7 @@
                 <div class="flex items-center justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold text-white">Locations</h2>
-                        <p class="text-sm text-slate-300">Storage areas connected to inventory batches</p>
+                        <p class="text-sm text-white/80">Storage areas connected to inventory batches</p>
                     </div>
                     <a href="{{ route('locations.create') }}" class="rounded-full border border-blue-500/50 bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Add Location</a>
                 </div>
@@ -139,22 +141,22 @@
                             <div class="flex items-start justify-between gap-4">
                                 <div>
                                     <p class="font-semibold text-white">{{ $location->name }}</p>
-                                    <p class="mt-1 text-sm text-slate-300">{{ $location->inventoryBatches->count() }} batches linked</p>
+                                    <p class="mt-1 text-sm text-white/80">{{ $location->inventoryBatches->count() }} batches linked</p>
                                 </div>
                                 <span class="rounded-full bg-blue-500/15 px-3 py-1 text-xs font-semibold text-blue-200">{{ $locationStock }} units</span>
                             </div>
 
                             <div class="mt-4 flex items-center gap-3">
-                                <a href="{{ route('locations.edit', $location) }}" class="text-sm font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-200">Edit</a>
-                                <form action="{{ route('locations.destroy', $location) }}" method="POST" onsubmit="return confirm('Delete this location?');">
+                                <a href="{{ route('locations.edit', $location) }}" class="table-action">Edit</a>
+                                <form action="{{ route('locations.destroy', $location) }}" method="POST" onsubmit="return confirm('Delete this location?');" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-sm font-medium text-rose-600 transition hover:text-rose-700 dark:text-rose-300 dark:hover:text-rose-200">Delete</button>
+                                    <button type="submit" class="table-action action-danger">Delete</button>
                                 </form>
                             </div>
                         </div>
                     @empty
-                        <div class="rounded-2xl border border-dashed border-white/20 p-6 text-sm text-slate-400">No locations yet.</div>
+                        <div class="rounded-2xl border border-dashed border-white/20 p-6 text-sm text-white/80">No locations yet.</div>
                     @endforelse
                 </div>
             </div>
@@ -166,7 +168,7 @@
                 <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                     <div>
                         <h2 class="text-3xl font-bold tracking-tight text-white">Outbound Transactions</h2>
-                        <p class="mt-2 text-sm text-slate-300">Manage stock transfers from pending approval to completed transfer.</p>
+                        <p class="mt-2 text-sm text-white/80">Manage stock transfers from pending approval to completed transfer.</p>
                     </div>
 
                     <a href="{{ route('outbound.create') }}" class="btn btn-primary">
@@ -177,19 +179,19 @@
 
                 <div class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     <div class="app-card p-5">
-                        <p class="text-sm text-slate-300">Pending</p>
+                        <p class="text-sm text-white/80">Pending</p>
                         <p class="mt-2 text-3xl font-semibold text-white">{{ $pendingOutbounds }}</p>
                     </div>
                     <div class="app-card p-5">
-                        <p class="text-sm text-slate-300">Approved</p>
+                        <p class="text-sm text-white/80">Approved</p>
                         <p class="mt-2 text-3xl font-semibold text-white">{{ $approvedOutbounds }}</p>
                     </div>
                     <div class="app-card p-5">
-                        <p class="text-sm text-slate-300">Transferred</p>
+                        <p class="text-sm text-white/80">Transferred</p>
                         <p class="mt-2 text-3xl font-semibold text-white">{{ $transferredOutbounds }}</p>
                     </div>
                     <div class="app-card p-5">
-                        <p class="text-sm text-slate-300">Total Amount</p>
+                        <p class="text-sm text-white/80">Total Amount</p>
                         <p class="mt-2 text-3xl font-semibold text-white">&#8369;{{ number_format($outboundTotalAmount, 2) }}</p>
                     </div>
                 </div>
@@ -199,9 +201,9 @@
                 <div class="flex flex-col gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h2 class="text-xl font-semibold text-white">Outbound Records</h2>
-                        <p class="text-sm text-slate-300">Line details, status, and transfer actions.</p>
+                        <p class="text-sm text-white/80">Line details, status, and transfer actions.</p>
                     </div>
-                    <span class="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-300">
+                    <span class="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white/80">
                         {{ $outbounds->count() }} records
                     </span>
                 </div>
@@ -223,15 +225,15 @@
                         <tbody class="divide-y divide-white/10">
                             @forelse($outbounds as $outbound)
                                 <tr class="transition hover:bg-white/5">
-                                    <td class="px-6 py-5 font-mono text-xs font-semibold text-slate-200">
+                                    <td class="px-6 py-5 font-mono text-xs font-semibold text-white/80">
                                         <button type="button" onclick="document.getElementById('inventory-outbound-details-{{ $outbound->out_transactionID }}').classList.toggle('hidden')" class="text-blue-300 hover:text-blue-200">
                                             #{{ str_pad($outbound->out_transactionID, 5, '0', STR_PAD_LEFT) }}
                                         </button>
                                     </td>
-                                    <td class="px-6 py-5 text-slate-300">{{ $outbound->transaction_date?->format('M d, Y') }}</td>
+                                    <td class="px-6 py-5 text-white/80">{{ $outbound->transaction_date?->format('M d, Y') }}</td>
                                     <td class="px-6 py-5 font-medium text-white">{{ $outbound->destination }}</td>
-                                    <td class="px-6 py-5 text-slate-300">{{ $outbound->user->name ?? 'N/A' }}</td>
-                                    <td class="px-6 py-5 text-center text-slate-300">{{ $outbound->outboundLineItems->count() }}</td>
+                                    <td class="px-6 py-5 text-white/80">{{ $outbound->user->name ?? 'N/A' }}</td>
+                                    <td class="px-6 py-5 text-center text-white/80">{{ $outbound->outboundLineItems->count() }}</td>
                                     <td class="px-6 py-5 text-center">
                                         <span class="rounded-lg px-3 py-1 text-xs font-semibold {{ $outbound->status === 'Transferred' ? 'bg-emerald-500/15 text-emerald-200' : ($outbound->status === 'Approved' ? 'bg-blue-500/15 text-blue-200' : 'bg-amber-500/15 text-amber-200') }}">
                                             {{ $outbound->status ?? 'Pending' }}
@@ -246,7 +248,7 @@
                                                 <form action="{{ route('outbound.approve', $outbound) }}" method="POST">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <button type="submit" class="font-medium text-emerald-300 hover:text-emerald-200">Approve</button>
+                                                    <button type="submit" class="table-action action-success">Approve</button>
                                                 </form>
                                             @endif
 
@@ -254,7 +256,7 @@
                                                 <form action="{{ route('outbound.deliver', $outbound) }}" method="POST">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <button type="submit" class="font-medium text-emerald-300 hover:text-emerald-200">Transfer</button>
+                                                    <button type="submit" class="table-action action-success">Transfer</button>
                                                 </form>
                                             @endif
                                         </div>
@@ -265,8 +267,8 @@
                                         <div class="rounded-lg border border-white/10 bg-white/5 p-4">
                                             <h3 class="mb-3 text-sm font-semibold text-white">Transfer line details</h3>
                                             <div class="overflow-x-auto">
-                                                <table class="w-full text-left text-xs text-slate-300">
-                                                    <thead class="text-slate-400">
+                                                <table class="w-full text-left text-xs text-white/80">
+                                                    <thead class="text-white/80">
                                                         <tr>
                                                             <th class="py-2">Medicine</th>
                                                             <th class="py-2">Batch</th>
@@ -296,7 +298,7 @@
                                     <td colspan="8" class="px-6 py-12 text-center">
                                         <div class="mx-auto max-w-md rounded-2xl border border-white/10 bg-white/5 px-6 py-8">
                                             <p class="text-lg font-semibold text-white">No outbound transactions yet.</p>
-                                            <p class="mt-2 text-sm text-slate-300">Create a pending outbound transfer when stock needs to move out.</p>
+                                            <p class="mt-2 text-sm text-white/80">Create a pending outbound transfer when stock needs to move out.</p>
                                             <a href="{{ route('outbound.create') }}" class="btn btn-primary mt-5">Create Outbound</a>
                                         </div>
                                     </td>

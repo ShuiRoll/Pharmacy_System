@@ -12,44 +12,42 @@
 
 <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
     <div>
-        <h1 class="text-3xl font-bold">Sale #{{ str_pad($sale->saleID, 5, '0', STR_PAD_LEFT) }}</h1>
-        <p class="text-gray-600 dark:text-gray-400">{{ $sale->sold_at?->format('M d, Y - h:i A') ?? $sale->created_at?->format('M d, Y - h:i A') }}</p>
+        <h1 class="text-3xl font-bold text-white">Sale #{{ str_pad($sale->saleID, 5, '0', STR_PAD_LEFT) }}</h1>
+        <p class="text-white/80">{{ $sale->sold_at?->format('M d, Y - h:i A') ?? $sale->created_at?->format('M d, Y - h:i A') }}</p>
     </div>
-    <a href="{{ route('sales.index') }}" class="rounded-2xl border border-gray-300 px-5 py-3 text-sm font-medium dark:border-gray-600">
-        Back to Sales
-    </a>
+    <a href="{{ route('sales.index') }}" class="table-action">Back to Sales</a>
 </div>
 
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-    <section class="rounded-3xl bg-white p-6 shadow-sm dark:bg-gray-800 lg:col-span-2">
+    <section class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-sm lg:col-span-2">
         <div class="mb-5 flex items-center justify-between gap-4">
-            <h2 class="text-xl font-semibold">Order Items</h2>
+            <h2 class="text-xl font-semibold text-white">Order Items</h2>
             @if($isReturned)
-                <span class="rounded-full bg-amber-100 px-4 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-500/15 dark:text-amber-200">Returned</span>
+                <span class="status-pill status-warning">Returned</span>
             @else
-                <span class="rounded-full bg-emerald-100 px-4 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200">Saved</span>
+                <span class="status-pill status-success">Saved</span>
             @endif
         </div>
 
-        <div class="overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700">
+        <div class="overflow-hidden rounded-2xl border border-white/10">
             <table class="w-full">
-                <thead class="bg-gray-50 dark:bg-gray-700">
+                <thead class="bg-slate-900/50 text-white/80">
                     <tr>
-                        <th class="p-4 text-left text-sm font-medium">Medicine</th>
-                        <th class="p-4 text-left text-sm font-medium">Batch</th>
-                        <th class="p-4 text-center text-sm font-medium">Qty</th>
-                        <th class="p-4 text-right text-sm font-medium">Price</th>
-                        <th class="p-4 text-right text-sm font-medium">Line Total</th>
+                        <th class="p-4 text-left text-sm font-semibold uppercase tracking-[0.2em]">Medicine</th>
+                        <th class="p-4 text-left text-sm font-semibold uppercase tracking-[0.2em]">Batch</th>
+                        <th class="p-4 text-center text-sm font-semibold uppercase tracking-[0.2em]">Qty</th>
+                        <th class="p-4 text-right text-sm font-semibold uppercase tracking-[0.2em]">Price</th>
+                        <th class="p-4 text-right text-sm font-semibold uppercase tracking-[0.2em]">Line Total</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody class="divide-y divide-white/10">
                     @foreach($sale->saleLines as $line)
                         <tr>
-                            <td class="p-4 font-medium">{{ $line->item->name ?? '-' }}</td>
-                            <td class="p-4 text-sm text-gray-500 dark:text-gray-400">{{ $line->batch->lot_number ?? '-' }}</td>
-                            <td class="p-4 text-center">{{ $line->quantity }}</td>
-                            <td class="p-4 text-right">PHP {{ number_format($line->price, 2) }}</td>
-                            <td class="p-4 text-right font-semibold">PHP {{ number_format($line->price * $line->quantity, 2) }}</td>
+                            <td class="p-4 font-medium text-white">{{ $line->item->name ?? '-' }}</td>
+                            <td class="p-4 text-sm text-white/80">{{ $line->batch->lot_number ?? '-' }}</td>
+                            <td class="p-4 text-center text-white">{{ $line->quantity }}</td>
+                            <td class="p-4 text-right text-white">PHP {{ number_format($line->price, 2) }}</td>
+                            <td class="p-4 text-right font-semibold text-white">PHP {{ number_format($line->price * $line->quantity, 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -58,51 +56,51 @@
     </section>
 
     <aside class="space-y-6">
-        <section class="rounded-3xl bg-white p-6 shadow-sm dark:bg-gray-800">
-            <h2 class="text-xl font-semibold">Payment</h2>
+        <section class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-sm">
+            <h2 class="text-xl font-semibold text-white">Payment</h2>
             <dl class="mt-5 space-y-3 text-sm">
                 <div class="flex justify-between gap-4">
-                    <dt class="text-gray-500 dark:text-gray-400">Cashier</dt>
-                    <dd class="font-medium">{{ $sale->user->name ?? '-' }}</dd>
+                    <dt class="text-white/80">Cashier</dt>
+                    <dd class="font-medium text-white">{{ $sale->user->name ?? '-' }}</dd>
                 </div>
                 <div class="flex justify-between gap-4">
-                    <dt class="text-gray-500 dark:text-gray-400">Method</dt>
-                    <dd class="font-medium">{{ $sale->payment_method }}</dd>
+                    <dt class="text-white/80">Method</dt>
+                    <dd class="font-medium text-white">{{ $sale->payment_method }}</dd>
                 </div>
                 @if($sale->gcash_reference)
                     <div class="flex justify-between gap-4">
-                        <dt class="text-gray-500 dark:text-gray-400">GCash Ref</dt>
-                        <dd class="font-medium">{{ $sale->gcash_reference }}</dd>
+                        <dt class="text-white/80">GCash Ref</dt>
+                        <dd class="font-medium text-white">{{ $sale->gcash_reference }}</dd>
                     </div>
                 @endif
                 @if($sale->card_reference)
                     <div class="flex justify-between gap-4">
-                        <dt class="text-gray-500 dark:text-gray-400">Card Ref</dt>
-                        <dd class="font-medium">{{ $sale->card_reference }}</dd>
+                        <dt class="text-white/80">Card Ref</dt>
+                        <dd class="font-medium text-white">{{ $sale->card_reference }}</dd>
                     </div>
                 @endif
             </dl>
         </section>
 
-        <section class="rounded-3xl bg-white p-6 shadow-sm dark:bg-gray-800">
-            <h2 class="text-xl font-semibold">Totals</h2>
+        <section class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-sm">
+            <h2 class="text-xl font-semibold text-white">Totals</h2>
             <dl class="mt-5 space-y-3 text-sm">
                 <div class="flex justify-between gap-4">
-                    <dt class="text-gray-500 dark:text-gray-400">Subtotal</dt>
-                    <dd class="font-medium">PHP {{ number_format($subtotal, 2) }}</dd>
+                    <dt class="text-white/80">Subtotal</dt>
+                    <dd class="font-medium text-white">PHP {{ number_format($subtotal, 2) }}</dd>
                 </div>
                 <div class="flex justify-between gap-4">
-                    <dt class="text-gray-500 dark:text-gray-400">VAT</dt>
-                    <dd class="font-medium">PHP {{ number_format($taxAmount, 2) }}</dd>
+                    <dt class="text-white/80">VAT</dt>
+                    <dd class="font-medium text-white">PHP {{ number_format($taxAmount, 2) }}</dd>
                 </div>
-                <div class="flex justify-between gap-4 border-t border-gray-200 pt-3 text-base dark:border-gray-700">
-                    <dt class="font-semibold">Original Total</dt>
-                    <dd class="font-bold">PHP {{ number_format($sale->total, 2) }}</dd>
+                <div class="flex justify-between gap-4 border-t border-white/10 pt-3 text-base">
+                    <dt class="font-semibold text-white">Original Total</dt>
+                    <dd class="font-bold text-white">PHP {{ number_format($sale->total, 2) }}</dd>
                 </div>
                 @if($isReturned)
-                    <div class="flex justify-between gap-4 text-base text-amber-600 dark:text-amber-200">
-                        <dt class="font-semibold">Report Total</dt>
-                        <dd class="font-bold">PHP 0.00</dd>
+                    <div class="flex justify-between gap-4 text-base text-amber-600">
+                        <dt class="font-semibold text-white">Report Total</dt>
+                        <dd class="font-bold text-white">PHP 0.00</dd>
                     </div>
                 @endif
             </dl>
